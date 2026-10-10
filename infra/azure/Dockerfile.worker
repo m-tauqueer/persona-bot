@@ -1,0 +1,10 @@
+FROM python:3.12-slim-bookworm
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
+WORKDIR /app
+COPY worker/pyproject.toml worker/uv.lock worker/.python-version ./
+COPY worker/src ./src
+RUN uv sync --frozen --no-dev
+ENV PATH="/app/.venv/bin:$PATH"
+ENV PYTHONUNBUFFERED=1
+EXPOSE 8000
+CMD ["python", "-m", "worker"]

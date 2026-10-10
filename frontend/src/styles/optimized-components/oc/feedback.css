@@ -1,0 +1,115 @@
+.oc-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 14px;
+  border-radius: 13px;
+  border: 1px solid var(--stroke-2);
+  background: rgba(255,255,255,.02);
+}
+
+.oc-alert__ic {
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  display: grid;
+  place-items: center;
+  flex: none;
+  color: var(--text-hi);
+  background: var(--glass-chip);
+}
+
+.oc-alert__title {
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  color: var(--text-hi);
+}
+
+.oc-alert__desc {
+  font-family: var(--font-ui);
+  font-size: 12.5px;
+  color: var(--text-mid);
+  margin-top: 3px;
+  line-height: 1.5;
+}
+
+.oc-alert__x {
+  flex: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 7px;
+  display: grid;
+  place-items: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-lo);
+}
+
+.oc-alert__x:hover {
+  color: var(--text-hi);
+  background: rgba(255,255,255,.06);
+}
+
+.oc-alert--info {
+  border-color: rgba(125,162,255,.28);
+}
+
+.oc-alert--info .oc-alert__ic {
+  color: #7da2ff;
+  background: rgba(125,162,255,.12);
+}
+
+.oc-alert--success {
+  border-color: rgba(90,209,154,.28);
+}
+
+.oc-alert--success .oc-alert__ic {
+  color: #5ad19a;
+  background: rgba(90,209,154,.12);
+}
+
+.oc-alert--warn {
+  border-color: rgba(255,107,62,.32);
+}
+
+.oc-alert--warn .oc-alert__ic {
+  color: var(--accent);
+  background: rgba(255,107,62,.13);
+}
+
+.oc-alert--error {
+  border-color: color-mix(in srgb,var(--color-error) 40%,transparent);
+}
+
+.oc-alert--error .oc-alert__ic {
+  color: var(--color-error);
+  background: color-mix(in srgb,var(--color-error) 14%,transparent);
+}
+
+.oc-empty__ic {
+  width: 60px;
+  height: 60px;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  color: var(--text-mid);
+  background: var(--glass-chip);
+  border: 1px solid var(--stroke-2);
+  margin-bottom: 6px;
+}
+
+.oc-empty__t {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 500;
+  color: #fff;
+}
+
+.oc-empty__d {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--text-mid);
+  max-width: 36ch;
+  margin-bottom: 8px;
+}

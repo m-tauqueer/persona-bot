@@ -1,0 +1,325 @@
+.st-page {
+  min-height: 100vh;
+  position: relative;
+  color: var(--text-hi);
+  font-family: var(--font-body);
+}
+
+.st {
+  position: relative;
+  z-index: 1;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 28px 22px 96px;
+}
+
+.st__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 36px;
+}
+
+.st__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-ui);
+  font-size: 13.5px;
+  color: var(--text-mid);
+  background: none;
+  border: 0;
+  cursor: pointer;
+  padding: 4px 0;
+}
+
+.st__brand:hover { color: var(--text-hi); }
+
+.st__lamp {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex: none;
+  background: var(--text-lo);
+}
+
+.st__lamp.is-ok {
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.08);
+  animation: st-breathe 2.8s ease-in-out infinite;
+}
+
+.st__lamp.is-down {
+  background: var(--accent);
+  box-shadow: 0 0 0 5px rgba(255, 107, 62, 0.18);
+}
+
+.st__kicker {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-lo);
+}
+
+.st__loading {
+  color: var(--text-mid);
+}
+
+.st__banner {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 22px;
+  align-items: center;
+  padding: 26px 26px 28px;
+  border-radius: 28px;
+  background: var(--glass-card);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--stroke);
+  margin-bottom: 8px;
+}
+
+.st__orb {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  flex: none;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.08), transparent 68%),
+    rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--stroke-2);
+}
+
+.st__orb-core {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.55);
+  box-shadow: 0 0 18px rgba(255, 255, 255, 0.28);
+}
+
+.st__banner.is-ok .st__orb-core {
+  animation: st-breathe 2.8s ease-in-out infinite;
+}
+
+.st__banner.is-down .st__orb {
+  background:
+    radial-gradient(circle at 36% 30%, rgba(255, 107, 62, 0.45), transparent 62%),
+    rgba(255, 107, 62, 0.08);
+  border-color: rgba(255, 107, 62, 0.28);
+}
+
+.st__banner.is-down .st__orb-core {
+  background: var(--accent);
+  box-shadow: 0 0 22px rgba(255, 107, 62, 0.55);
+}
+
+.st__headline {
+  font-family: var(--font-display);
+  font-size: clamp(26px, 4.4vw, 34px);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 1.12;
+  color: #fff;
+}
+
+.st__updated {
+  font-family: var(--font-ui);
+  font-size: 12.5px;
+  color: var(--text-lo);
+  margin-top: 8px;
+}
+
+.st__block { margin-top: 34px; }
+
+.st__h {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-lo);
+  margin-bottom: 12px;
+}
+
+.st__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-radius: 22px;
+  overflow: hidden;
+  background: var(--glass-card);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
+  backdrop-filter: var(--glass-blur-sm);
+  border: 1px solid var(--stroke);
+}
+
+.st__row,
+.st__incident {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 20px;
+  border-top: 1px solid var(--stroke);
+}
+
+.st__row:first-child,
+.st__incident:first-child { border-top: 0; }
+
+.st__name-block {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.st__name {
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: var(--text-hi);
+}
+
+.st__caption {
+  font-family: var(--font-ui);
+  font-size: 11.5px;
+  color: var(--text-lo);
+}
+
+.st__meta {
+  font-family: var(--font-ui);
+  font-size: 12px;
+  color: var(--text-lo);
+  margin-top: 6px;
+}
+
+.st-embed {
+  max-width: 720px;
+  margin: 0 0 10px;
+}
+
+.st-embed .st__banner {
+  padding: 22px 24px;
+}
+
+.st-embed .st__orb {
+  width: 56px;
+  height: 56px;
+}
+
+.st-embed .st__orb-core {
+  width: 18px;
+  height: 18px;
+}
+
+.st-embed .st__headline {
+  font-size: clamp(22px, 2.2vw, 30px);
+}
+
+.st-embed .st__block {
+  margin-top: 26px;
+}
+
+.st__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-ui);
+  font-size: 12.5px;
+  color: var(--text-mid);
+  flex: none;
+}
+
+.st__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex: none;
+  background: var(--text-lo);
+}
+
+.st__dot.is-ok { background: rgba(255, 255, 255, 0.78); }
+.st__dot.is-down { background: var(--accent); }
+
+.st__day-group + .st__day-group { margin-top: 22px; }
+
+.st__day {
+  font-family: var(--font-ui);
+  font-size: 12.5px;
+  color: var(--text-mid);
+  margin: 0 0 8px;
+}
+
+.st__incident {
+  display: block;
+}
+
+.st__incident time {
+  display: block;
+  font-family: var(--font-ui);
+  font-size: 12px;
+  color: var(--text-lo);
+  margin-bottom: 4px;
+}
+
+.st__incident p {
+  font-family: var(--font-body);
+  font-size: 14.5px;
+  color: var(--text-hi);
+  line-height: 1.4;
+}
+
+.st__foot {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 48px;
+  color: var(--text-lo);
+  font-family: var(--font-ui);
+  font-size: 13px;
+}
+
+.st-link {
+  background: none;
+  border: 0;
+  color: var(--text-mid);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  font: inherit;
+}
+
+.st-link:hover { color: var(--text-hi); }
+
+.st-brand:focus-visible,
+.st__brand:focus-visible,
+.st-link:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+@keyframes st-breathe {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.55; transform: scale(0.92); }
+}
+
+@media (max-width: 560px) {
+  .st { padding: 22px 16px 80px; }
+  .st__banner {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 22px 20px 24px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .st__lamp.is-ok,
+  .st__banner.is-ok .st__orb-core {
+    animation: none;
+  }
+}

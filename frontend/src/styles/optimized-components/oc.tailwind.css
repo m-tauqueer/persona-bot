@@ -1,0 +1,399 @@
+.oc .ui-card--glass,.oc .lead {
+  @apply relative;
+}
+
+.oc .ui-card--glass>*,.oc .lead>* {
+  @apply relative z-[1];
+}
+
+.oc__navlinks {
+  @apply flex gap-[6px] ml-auto;
+}
+
+.oc__controls {
+  @apply flex items-center gap-[12px] flex-wrap mt-[26px];
+}
+
+.oc__toc-group {
+  @apply flex flex-col gap-[1px];
+}
+
+.oc__main {
+  @apply min-w-0;
+}
+
+.oc-sec__head {
+  @apply mb-[24px];
+}
+
+.oc-grid {
+  @apply grid gap-[16px];
+}
+
+.oc-grid--2 {
+  @apply grid-cols-2;
+}
+
+.oc-grid--3 {
+  @apply grid-cols-3;
+}
+
+.oc-grid--4 {
+  @apply grid-cols-4;
+}
+
+.oc-grid--auto {
+  @apply grid-cols-[repeat(auto-fill,minmax(210px,1fr))];
+}
+
+.oc-row {
+  @apply flex flex-wrap items-center gap-[14px];
+}
+
+.oc-stack {
+  @apply flex flex-col gap-[14px];
+}
+
+.oc-demo__stage {
+  @apply flex-1 flex items-center justify-center flex-wrap gap-[14px] py-[30px] px-[22px] min-h-[104px];
+}
+
+.oc-demo__stage--col {
+  @apply flex-col items-stretch;
+}
+
+.oc-demo__stage--start {
+  @apply justify-start;
+}
+
+.oc-swatch__chip {
+  @apply h-[72px];
+}
+
+.oc-icons__bar {
+  @apply flex flex-wrap gap-[12px] items-center mb-[6px];
+}
+
+.oc-icons__bar .ui-field {
+  @apply flex-1 min-w-[200px];
+}
+
+.oc-icons__ctrl {
+  @apply flex items-center gap-[8px];
+}
+
+.oc-sw {
+  @apply flex gap-[7px] items-center;
+}
+
+.oc-icons__cat {
+  @apply mt-[26px];
+}
+
+.oc-icons__cathead {
+  @apply flex items-baseline gap-[10px] mb-[12px];
+}
+
+.oc-icons__grid {
+  @apply grid grid-cols-[repeat(auto-fill,minmax(104px,1fr))] gap-[10px];
+}
+
+.oc-icons__cell svg {
+  @apply w-[var(--oc-icon-size,30px)] h-[var(--oc-icon-size,30px)];
+}
+
+.oc-rings {
+  @apply flex flex-wrap gap-[14px];
+}
+
+.oc-ring__wrap {
+  @apply relative grid place-items-center;
+}
+
+.oc-ring__center {
+  @apply absolute inset-0 flex items-center justify-center;
+}
+
+.oc-vitals {
+  @apply grid grid-cols-[repeat(auto-fit,minmax(210px,1fr))] gap-[14px];
+}
+
+.oc-tile {
+  @apply relative overflow-hidden flex flex-col gap-[10px] min-h-[148px];
+}
+
+.oc-tile__row {
+  @apply flex items-start gap-[8px];
+}
+
+.oc-tile__spark {
+  @apply mt-auto opacity-[.95];
+}
+
+.oc-spark {
+  @apply relative w-full;
+}
+
+.oc-spark svg {
+  @apply block w-full;
+}
+
+.oc-heat {
+  @apply relative py-[4px] px-0;
+}
+
+.oc-heat__plot {
+  @apply relative w-full;
+}
+
+.oc-heat__plot svg {
+  @apply block w-full h-auto;
+}
+
+.oc-heat__plot:hover .oc-hex {
+  @apply opacity-[.45];
+}
+
+.oc-heat__plot .oc-hex:hover {
+  @apply opacity-100;
+}
+
+.oc-legend {
+  @apply flex flex-wrap items-center gap-y-[14px] gap-x-[18px];
+}
+
+.oc-legend__sw {
+  @apply w-[11px] h-[11px] rounded-[3px] flex-none;
+}
+
+.oc-legend__scale {
+  @apply flex flex-col gap-[6px] min-w-[180px] ml-auto;
+}
+
+.oc-graph {
+  @apply flex justify-center;
+}
+
+.oc-graph__svg {
+  @apply max-w-full h-auto;
+}
+
+.oc-gnode {
+  @apply cursor-pointer;
+}
+
+.oc-cal__grid {
+  @apply grid gap-[3px];
+}
+
+.oc-cal__col {
+  @apply grid grid-rows-[repeat(7,1fr)] gap-[3px];
+}
+
+.oc-cal__key {
+  @apply inline-flex items-center gap-[4px];
+}
+
+.oc-cal__key i {
+  @apply w-[11px] h-[11px] rounded-[3px] inline-block;
+}
+
+.oc-tl {
+  @apply flex flex-col;
+}
+
+.oc-tl__group:first-child {
+  @apply mt-0;
+}
+
+.oc-tl__rail {
+  @apply relative flex justify-center self-stretch;
+}
+
+.oc-tl__meta {
+  @apply mt-[5px];
+}
+
+.oc-comp.is-hovering .oc-comp__seg {
+  @apply opacity-[.4];
+}
+
+.oc-src {
+  @apply flex flex-col;
+}
+
+.oc-src__dot {
+  @apply w-[7px] h-[7px] rounded-[50%] flex-none;
+}
+
+.oc-table {
+  @apply flex flex-col;
+}
+
+.oc-table__head,.oc-table__row {
+  @apply grid grid-cols-[2.4fr_1.1fr_1fr_.7fr_1fr] gap-[12px] items-center;
+}
+
+.oc-table__mem {
+  @apply flex items-center gap-[10px] min-w-0;
+}
+
+.oc-table__row:hover .oc-table__acts {
+  @apply opacity-100;
+}
+
+.oc-cmdk.is-open {
+  @apply opacity-100 pointer-events-auto;
+}
+
+.oc-cmdk__body {
+  @apply max-h-[336px] overflow-auto p-[8px];
+}
+
+.oc-cmdk__foot span {
+  @apply inline-flex items-center gap-[6px];
+}
+
+.oc-toaststack {
+  @apply flex flex-col gap-[10px] items-start mt-[16px] min-h-[40px];
+}
+
+.oc-toast__bar {
+  @apply absolute left-0 top-0 bottom-0 w-[3px];
+}
+
+.oc-toast__ic {
+  @apply w-[30px] h-[30px] rounded-[9px] grid place-items-center flex-none;
+}
+
+.oc-toast__x {
+  @apply self-start;
+}
+
+.oc-skel--line {
+  @apply h-[11px];
+}
+
+.oc-skel--circle {
+  @apply rounded-[50%];
+}
+
+.oc-skel--tile {
+  @apply h-[96px] rounded-[14px];
+}
+
+.oc-mem__top {
+  @apply flex items-center gap-[10px] mb-[13px];
+}
+
+.oc-mem__foot {
+  @apply flex items-center justify-between mt-[15px] gap-[10px];
+}
+
+.oc-mem__tags {
+  @apply flex gap-[6px] flex-wrap;
+}
+
+.oc-panels {
+  @apply flex flex-wrap gap-y-[32px] gap-x-[24px] justify-center items-start pt-[20px];
+}
+
+.oc .callpanel {
+  @apply relative top-auto right-auto;
+}
+
+.oc-recall__head {
+  @apply flex items-center gap-[11px];
+}
+
+.oc-recall__head .ibtn {
+  @apply ml-auto;
+}
+
+.oc-recall__chips {
+  @apply flex gap-[6px] mt-[11px];
+}
+
+.oc-recall__cites {
+  @apply py-0 px-[2px];
+}
+
+.oc-recall__ct {
+  @apply flex-1 min-w-0;
+}
+
+.oc-chiprow {
+  @apply flex flex-wrap gap-[7px];
+}
+
+.oc-stats {
+  @apply flex flex-col;
+}
+
+.oc-btn-clip .ui-btn__lb {
+  @apply relative z-[1];
+}
+
+.oc-acc__item.is-open .oc-acc__body {
+  @apply grid-rows-[1fr];
+}
+
+.oc-acc__item.is-open .oc-acc__inner {
+  @apply pb-[16px];
+}
+
+.oc-pop {
+  @apply relative inline-block;
+}
+
+.oc-crumbs__item {
+  @apply inline-flex items-center;
+}
+
+.oc-page {
+  @apply inline-flex items-center gap-[5px];
+}
+
+.oc-page__nav:disabled {
+  @apply opacity-[.35] cursor-not-allowed;
+}
+
+.oc-steps {
+  @apply flex gap-[0];
+}
+
+.oc-steps__ctl {
+  @apply flex gap-[10px] justify-end mt-[22px];
+}
+
+.oc-tree__chev.is-hidden {
+  @apply invisible;
+}
+
+.oc-tree__nm {
+  @apply flex-1 whitespace-nowrap overflow-hidden text-ellipsis;
+}
+
+.oc-alert__body {
+  @apply flex-1 min-w-0;
+}
+
+.oc-empty {
+  @apply flex flex-col items-center text-center gap-[8px] py-[44px] px-[20px];
+}
+
+.oc-radios {
+  @apply flex flex-col gap-[4px];
+}
+
+.oc-slider {
+  @apply flex items-center gap-[14px] w-full;
+}
+
+.oc-taginput__tag {
+  @apply inline-flex items-center gap-[6px];
+}
+
+.oc-code__dots {
+  @apply inline-flex gap-[5px];
+}

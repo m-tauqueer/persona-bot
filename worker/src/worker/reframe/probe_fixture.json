@@ -1,0 +1,19 @@
+{
+  "messages": [
+    "yeah i used to walk the thames every sunday",
+    "loved the fog on the water"
+  ],
+  "history": [
+    {
+      "speaker": "user",
+      "text": "what did you like to do on weekends?"
+    },
+    {
+      "speaker": "persona",
+      "text": "I kept to the river."
+    }
+  ],
+  "voice_config": {
+    "spoken_style": "calm first person"
+  }
+}

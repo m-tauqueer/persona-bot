@@ -1,0 +1,33 @@
+.oc-btn-clip {
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  font-size: 13.5px;
+  position: relative;
+  overflow: hidden;
+  justify-content: center;
+  flex: none;
+}
+
+.oc-btn-clip__edge {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  color: var(--rule);
+}
+
+.oc-btn-clip__ic {
+  position: relative;
+  z-index: 1;
+}
+
+.oc-btn-clip.ui-btn--solid .oc-btn-clip__edge {
+  color: rgba(0,0,0,.16);
+}
+
+.oc-btn-clip.ui-btn--ember .oc-btn-clip__edge {
+  color: rgba(0,0,0,.24);
+}

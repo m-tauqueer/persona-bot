@@ -1,0 +1,142 @@
+.oc-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 0;
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  color: var(--text-mid);
+}
+
+.oc-check__box {
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+  display: grid;
+  place-items: center;
+  border: 1.5px solid var(--rule-strong);
+  color: #1a0a04;
+  transition: .15s;
+}
+
+.oc-check.is-on .oc-check__box {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.oc-check.is-on {
+  color: var(--text-hi);
+}
+
+.oc-radio {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 0;
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  color: var(--text-mid);
+}
+
+.oc-radio__dot {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1.5px solid var(--rule-strong);
+  display: grid;
+  place-items: center;
+  transition: .15s;
+}
+
+.oc-radio__dot::after {
+  content: "";
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--accent);
+  transform: scale(0);
+  transition: transform .15s;
+}
+
+.oc-radio.is-on {
+  color: var(--text-hi);
+}
+
+.oc-radio.is-on .oc-radio__dot {
+  border-color: var(--accent);
+}
+
+.oc-radio.is-on .oc-radio__dot::after {
+  transform: scale(1);
+}
+
+.oc-range {
+  flex: 1;
+  accent-color: var(--accent);
+  height: 4px;
+}
+
+.oc-slider__val {
+  font-family: var(--font-sans);
+  font-size: 18px;
+  font-weight: 500;
+  color: #fff;
+  min-width: 48px;
+  text-align: right;
+}
+
+.oc-slider__val span {
+  font-size: 12px;
+  color: var(--text-lo);
+  margin-left: 1px;
+}
+
+.oc-taginput {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 11px;
+  border-radius: 11px;
+  background: var(--glass-chip);
+  border: 1px solid var(--stroke-2);
+  cursor: text;
+}
+
+.oc-taginput:focus-within {
+  border-color: var(--rule-strong);
+}
+
+.oc-taginput__tag button {
+  background: none;
+  border: none;
+  color: var(--text-lo);
+  cursor: pointer;
+  font-size: 10px;
+  padding: 0;
+}
+
+.oc-taginput__tag button:hover {
+  color: var(--text-hi);
+}
+
+.oc-taginput__in {
+  flex: 1;
+  min-width: 90px;
+  background: none;
+  border: none;
+  outline: none;
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--text-hi);
+}
+
+.oc-taginput__in::placeholder {
+  color: var(--text-faint);
+}

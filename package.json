@@ -1,0 +1,51 @@
+{
+  "name": "voice-bot",
+  "private": true,
+  "version": "0.1.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "workspaces": [
+    "frontend",
+    "gateway"
+  ],
+  "scripts": {
+    "dev:frontend": "npm run dev -w frontend",
+    "dev:gateway": "npm run dev -w gateway",
+    "dev:worker": "uv run --directory worker python -m worker",
+    "build:frontend": "npm run build -w frontend",
+    "build:gateway": "npm run build -w gateway",
+    "typecheck": "npm run typecheck -w frontend && npm run typecheck -w gateway",
+    "test": "npm run test -w gateway && npm run test -w frontend && npm run test:worker",
+    "test:worker": "uv run --directory worker python -m pytest",
+    "lint": "biome check gateway/src frontend/vite.config.ts",
+    "lint:fix": "biome check --write gateway/src frontend/vite.config.ts",
+    "infra:up": "docker compose -f infra/compose.yaml --env-file .env up -d --wait",
+    "infra:down": "docker compose -f infra/compose.yaml --env-file .env down",
+    "infra:reset": "docker compose -f infra/compose.yaml --env-file .env down -v && docker compose -f infra/compose.yaml --env-file .env up -d --wait",
+    "infra:ps": "docker compose -f infra/compose.yaml --env-file .env ps",
+    "smoke": "npm run smoke -w gateway",
+    "migrate": "npm run migrate -w gateway",
+    "retain": "npm run retain -w gateway",
+    "admin": "uv run --directory worker python -m worker.admin",
+    "reframe": "uv run --directory worker python -m worker.reframe.probe",
+    "controller": "uv run --directory worker python -m worker.controller.probe",
+    "chat": "uv run --directory worker python -m worker.turn.probe",
+    "byo": "uv run --directory worker python -m worker.byo.probe",
+    "brains": "uv run --directory worker python -m worker.brain.probe",
+    "voice": "npm run voice -w gateway",
+    "call": "npm run call -w gateway",
+    "fish": "npm run fish -w gateway",
+    "isolation": "npm run isolation -w gateway",
+    "nav": "npm run nav -w frontend",
+    "audio": "npm run audio -w gateway",
+    "bargein": "npm run bargein -w gateway",
+    "failures": "npm run failures -w gateway && uv run --directory worker python -m worker.failure_probe",
+    "budgets": "npm run budgets -w gateway && uv run --directory worker python -m worker.observe.probe",
+    "observe": "npm run observe -w gateway",
+    "security": "npm run isolation && npm run security -w gateway && uv run --directory worker python -m worker.observe.security"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4"
+  }
+}

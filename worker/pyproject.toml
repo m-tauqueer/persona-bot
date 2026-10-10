@@ -1,0 +1,81 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "worker"
+version = "0.1.0"
+description = "Engram SDK and reframe LLM (the BYO-LLM brain)"
+requires-python = ">=3.12"
+dependencies = [
+    "cryptography",
+    "engram-ai-sdk",
+    "fastapi",
+    "httpx",
+    "openai",
+    "psycopg[binary,pool]",
+    "pydantic-settings",
+    "python-dotenv",
+    "python-multipart",
+    "redis",
+    "structlog",
+    "uvicorn[standard]",
+]
+
+[dependency-groups]
+dev = ["ruff", "pytest", "pytest-cov"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/worker"]
+
+[tool.ruff]
+target-version = "py312"
+src = ["src"]
+line-length = 88
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = [
+    "--cov=worker.controller",
+    "--cov=worker.turn.identity",
+    "--cov=worker.turn.grant",
+    "--cov=worker.quota.decision",
+    "--cov=worker.quota.settings",
+    "--cov=worker.lifecycle.gids",
+    "--cov=worker.lifecycle.purge",
+    "--cov=worker.ops.decision",
+    "--cov=worker.ratelimit",
+    "--cov=worker.api.internal_auth",
+    "--cov=worker.engram.org_member",
+    "--cov=worker.engram.user_id",
+    "--cov=worker.engram.tenant",
+    "--cov=worker.engram.member_secret",
+    "--cov=worker.engram.session",
+    "--cov=worker.engram.registry",
+    "--cov=worker.engram.engram_brain",
+    "--cov=worker.engram.scope_contract",
+    "--cov=worker.engram.scope_router",
+    "--cov=worker.engram.scope_defaults",
+    "--cov=worker.engram.caller_facts",
+    "--cov=worker.engram.caller_fact_defaults",
+    "--cov=worker.engram.closing",
+    "--cov=worker.admin.service",
+    "--cov=worker.admin.confirm",
+    "--cov=worker.admin.store",
+    "--cov=worker.admin.voice",
+    "--cov=worker.fish.clone",
+    "--cov=worker.fish.accept",
+    "--cov=worker.reframe.reframer",
+    "--cov=worker.reframe.answerer",
+    "--cov=worker.reframe.defaults",
+    "--cov-report=term-missing",
+    "--cov-fail-under=80",
+]
+
+[tool.coverage.run]
+branch = true
+omit = ["*/probe.py", "*/__main__.py"]

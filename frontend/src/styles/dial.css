@@ -1,0 +1,149 @@
+.dial-fab {
+  position: fixed; left: 26px; bottom: 26px; z-index: 120;
+  width: 56px; height: 56px; border-radius: 50%;
+  display: grid; place-items: center; cursor: pointer; color: #18181b; border: none;
+  background: radial-gradient(circle at 50% 34%, #fbfbfc, #e7e7ea 68%, #d0d0d6);
+  box-shadow:
+    0 12px 26px rgba(0, 0, 0, 0.5),
+    0 0 0 6px rgba(20, 20, 22, 0.55),
+    inset 0 2px 2px rgba(255, 255, 255, 0.95),
+    inset 0 -6px 12px rgba(0, 0, 0, 0.12);
+  transition: transform 0.28s cubic-bezier(0.34, 1.5, 0.5, 1), box-shadow 0.28s ease;
+}
+.dial-fab:hover {
+  transform: scale(1.06);
+  box-shadow:
+    0 16px 32px rgba(0, 0, 0, 0.55),
+    0 0 0 6px rgba(255, 255, 255, 0.16),
+    inset 0 2px 2px rgba(255, 255, 255, 0.95),
+    inset 0 -6px 12px rgba(0, 0, 0, 0.12);
+}
+.dial-fab:active { transform: scale(0.95); }
+
+.dial-overlay {
+  position: fixed; inset: 0; z-index: 300;
+  display: grid; place-items: center;
+  background: radial-gradient(130% 120% at 68% 50%, rgba(12, 12, 14, 0.5), rgba(4, 4, 5, 0.84));
+  -webkit-backdrop-filter: blur(16px) saturate(1.1);
+          backdrop-filter: blur(16px) saturate(1.1);
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.dial-overlay.is-open { opacity: 1; pointer-events: auto; }
+
+.dial-stage {
+  position: relative;
+  transform: scale(0.84) translateY(10px); opacity: 0.4;
+  transition: transform 0.52s cubic-bezier(0.34, 1.45, 0.5, 1), opacity 0.42s ease;
+}
+.dial-overlay.is-open .dial-stage { transform: none; opacity: 1; }
+
+.dial-close {
+  position: absolute; top: 28px; right: 32px; z-index: 2;
+  width: 44px; height: 44px; border-radius: 50%;
+  display: grid; place-items: center; cursor: pointer;
+  color: var(--text-mid); background: var(--glass-chip); border: 1px solid var(--stroke-2);
+  -webkit-backdrop-filter: var(--glass-blur-sm); backdrop-filter: var(--glass-blur-sm);
+  transition: color 0.15s, background 0.15s, border-color 0.15s;
+}
+.dial-close:hover { color: var(--text-hi); background: rgba(255, 255, 255, 0.08); border-color: var(--rule-strong); }
+
+.dial { position: relative; width: 440px; height: 440px; flex: none; }
+.dial__ring {
+  position: absolute; inset: 0; border-radius: 50%;
+  background:
+    radial-gradient(circle at 50% 36%, rgba(255, 255, 255, 0.05), transparent 56%),
+    radial-gradient(circle at 50% 50%, #212126, #18181b 62%, #131315);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.04),
+    0 50px 92px -34px rgba(0, 0, 0, 0.85);
+  -webkit-mask: radial-gradient(circle at 50% 50%, transparent 95px, #000 96px);
+          mask: radial-gradient(circle at 50% 50%, transparent 95px, #000 96px);
+}
+.dial__dividers {
+  position: absolute; inset: 0; border-radius: 50%; pointer-events: none;
+  background: repeating-conic-gradient(from 22.5deg, rgba(255, 255, 255, 0.08) 0deg 0.5deg, transparent 0.5deg 45deg);
+  -webkit-mask: radial-gradient(circle at 50% 50%, transparent 96px, #000 97px);
+          mask: radial-gradient(circle at 50% 50%, transparent 96px, #000 97px);
+}
+.dial__hi {
+  position: absolute; inset: 0; border-radius: 50%; pointer-events: none;
+  background: conic-gradient(from -22.5deg,
+    transparent 0deg, transparent 1.4deg,
+    rgba(8, 8, 10, 0.82) 3deg,
+    rgba(8, 8, 10, 0.82) 42deg,
+    transparent 43.6deg, transparent 360deg);
+  -webkit-mask: radial-gradient(circle at 50% 50%, transparent 96px, #000 97px);
+          mask: radial-gradient(circle at 50% 50%, transparent 96px, #000 97px);
+  transition: transform 0.44s cubic-bezier(0.3, 0.92, 0.26, 1);
+  will-change: transform;
+}
+.dial__hi::after {
+  content: ""; position: absolute; inset: 0; border-radius: 50%;
+  background: conic-gradient(from -22.5deg,
+    transparent 0deg, transparent 1.4deg,
+    rgba(255, 255, 255, 0.05) 3deg,
+    rgba(255, 255, 255, 0.05) 42deg,
+    transparent 43.6deg, transparent 360deg);
+  -webkit-mask: radial-gradient(circle at 50% 50%, transparent 96px, #000 98px, #000 101px, transparent 103px);
+          mask: radial-gradient(circle at 50% 50%, transparent 96px, #000 98px, #000 101px, transparent 103px);
+}
+.dial__seg {
+  position: absolute; top: 50%; left: 50%;
+  width: 56px; height: 56px; margin: -28px;
+  border: none; background: transparent; cursor: pointer;
+  border-radius: 50%; display: grid; place-items: center;
+  color: var(--text-lo); will-change: transform;
+  transition: transform 0.5s cubic-bezier(0.34, 1.5, 0.5, 1), color 0.25s ease;
+}
+.dial__seg svg { position: relative; z-index: 1; transition: transform 0.25s ease; }
+.dial__seg.is-active { color: var(--text-hi); }
+.dial__seg.is-active svg { transform: scale(1.1); }
+
+.dial__knob {
+  position: absolute; top: 50%; left: 50%; width: 152px; height: 152px; margin: -76px;
+  border-radius: 50%; display: grid; place-items: center; color: #1a1a1d;
+  background: radial-gradient(circle at 50% 32%, #fbfbfc, #ececef 52%, #d2d2d7 84%, #c2c2c8);
+  box-shadow:
+    0 14px 30px rgba(0, 0, 0, 0.55),
+    inset 0 2px 2px rgba(255, 255, 255, 0.95),
+    inset 0 -8px 14px rgba(0, 0, 0, 0.13),
+    0 0 0 9px rgba(22, 22, 25, 0.85),
+    0 0 0 10px rgba(255, 255, 255, 0.04);
+}
+.dial__knob::after {
+  content: ""; position: absolute; inset: 9px; border-radius: 50%;
+  box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.05), inset 0 0 18px rgba(0, 0, 0, 0.06);
+}
+
+.dial-flyout {
+  position: absolute; left: 100%; margin-left: 36px;
+  top: 50%; transform: translateY(-50%);
+  width: 268px;
+}
+.dial-flyout__head { display: flex; align-items: center; gap: 9px; font-family: var(--font-ui); font-size: 13px; font-weight: 500; color: var(--text-mid); margin: 0 0 13px 4px; }
+.dial-flyout__list { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+.dial-flyout__item {
+  display: flex; align-items: center; gap: 11px;
+  padding: 12px 14px; border-radius: 14px;
+  background: rgba(255, 255, 255, 0.035); border: 1px solid rgba(255, 255, 255, 0.06);
+  color: var(--text-mid); font-family: var(--font-ui); font-size: 14px; font-weight: 500; cursor: pointer;
+  animation: dialFly 0.46s cubic-bezier(0.2, 0.85, 0.3, 1) both;
+  transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.2s;
+}
+.dial-flyout__txt { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dial-flyout__item svg { opacity: 0.35; flex: none; }
+.dial-flyout__item:hover { background: rgba(255, 255, 255, 0.07); color: var(--text-hi); transform: translateX(3px); }
+.dial-flyout__item.is-active {
+  background: linear-gradient(100deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.03));
+  border-color: rgba(255, 255, 255, 0.18); color: var(--text-hi);
+}
+.dial-flyout__item.is-active svg { opacity: 0.6; }
+.dial-flyout__dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255, 255, 255, 0.2); flex: none; }
+.dial-flyout__item.is-active .dial-flyout__dot { background: #fff; box-shadow: 0 0 8px rgba(255, 255, 255, 0.3); }
+@keyframes dialFly { from { opacity: 0; transform: translateX(22px); } to { opacity: 1; transform: none; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .dial-overlay, .dial-stage, .dial__seg, .dial__glow, .dial-flyout__item { transition: none !important; animation: none !important; }
+}

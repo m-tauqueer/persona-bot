@@ -1,0 +1,238 @@
+.oc-mem__glyph {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  background: var(--glass-chip);
+  border: 1px solid var(--stroke-2);
+  color: var(--text-hi);
+  flex: none;
+}
+
+.oc-mem__src {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  color: var(--text-lo);
+}
+
+.oc-mem__kind {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--text-hi);
+  margin-top: 1px;
+}
+
+.oc-mem__title {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: -.01em;
+  color: #fff;
+  line-height: 1.25;
+}
+
+.oc-mem__excerpt {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--text-mid);
+  line-height: 1.5;
+  margin-top: 7px;
+}
+
+.oc-recall__badge {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  flex: none;
+  background: color-mix(in srgb,var(--accent) 18%,transparent);
+  color: var(--accent);
+  border: 1px solid rgba(255,107,62,.3);
+}
+
+.oc-recall__title {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 500;
+  color: #fff;
+  line-height: 1;
+}
+
+.oc-recall__sub {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  color: var(--text-lo);
+  margin-top: 2px;
+}
+
+.oc-recall__q {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 10px 13px;
+  border-radius: 11px;
+  color: var(--text-mid);
+  background: rgba(255,255,255,.04);
+  border: 1px solid var(--stroke-2);
+  font-family: var(--font-body);
+  font-size: 13px;
+}
+
+.oc-recall__ans {
+  padding: 14px !important;
+}
+
+.oc-recall__ans p {
+  font-family: var(--font-body);
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--text-hi);
+  margin: 0;
+}
+
+.oc-recall__ans b {
+  color: #fff;
+  font-weight: 600;
+}
+
+.oc-recall__ans mark {
+  background: color-mix(in srgb,var(--accent) 26%,transparent);
+  color: #ffd9cb;
+  border-radius: 4px;
+  padding: 0 3px;
+}
+
+.oc-recall__clbl {
+  font-family: var(--font-ui);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--text-lo);
+  margin-bottom: 4px;
+}
+
+.oc-recall__cite {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  border-top: 1px solid var(--stroke);
+}
+
+.oc-recall__cite:first-of-type {
+  border-top: none;
+}
+
+.oc-recall__cg {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  flex: none;
+  background: var(--glass-chip);
+  border: 1px solid var(--stroke-2);
+  color: var(--text-hi);
+}
+
+.oc-recall__cn {
+  font-family: var(--font-body);
+  font-size: 12.5px;
+  color: var(--text-hi);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.oc-recall__cs {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-lo);
+  margin-top: 1px;
+}
+
+.oc-drop {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  text-align: center;
+  padding: 22px 14px;
+  border: 1.5px dashed var(--stroke-2);
+  border-radius: 14px;
+  color: var(--text-lo);
+}
+
+.oc-drop__t {
+  font-family: var(--font-body);
+  font-size: 12.5px;
+  color: var(--text-mid);
+}
+
+.oc-drop__s {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-faint);
+}
+
+.oc-srcchip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 11px;
+  border-radius: 999px;
+  cursor: pointer;
+  background: var(--glass-chip);
+  border: 1px solid var(--stroke-2);
+  color: var(--text-mid);
+  font-family: var(--font-ui);
+  font-size: 12px;
+  transition: background .15s, color .15s;
+}
+
+.oc-srcchip:hover {
+  background: rgba(255,255,255,.08);
+  color: var(--text-hi);
+}
+
+.oc-stat {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 9px 0;
+  border-top: 1px solid var(--stroke);
+}
+
+.oc-stat:first-child {
+  border-top: none;
+}
+
+.oc-stat__ic {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  flex: none;
+  background: var(--glass-chip);
+  border: 1px solid var(--stroke-2);
+  color: var(--text-hi);
+}
+
+.oc-stat__l {
+  flex: 1;
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--text-mid);
+}
+
+.oc-stat__v {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-hi);
+}

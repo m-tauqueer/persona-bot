@@ -1,0 +1,138 @@
+.oc__shell {
+  display: grid;
+  grid-template-columns: 236px minmax(0,1fr);
+  gap: 48px;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 18px var(--oc-gut) 140px;
+}
+
+.oc__toc {
+  position: sticky;
+  top: 84px;
+  align-self: start;
+  max-height: calc(100vh - 104px);
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding-right: 6px;
+}
+
+.oc__toc::-webkit-scrollbar {
+  width: 6px;
+}
+
+.oc__toc::-webkit-scrollbar-thumb {
+  background: var(--rule);
+  border-radius: 999px;
+}
+
+.oc__toc-glabel {
+  font-family: var(--font-ui);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  padding: 0 10px 6px;
+}
+
+.oc__toc-link {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  text-align: left;
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: var(--font-ui);
+  font-size: 13px;
+  color: var(--text-lo);
+  border-left: 2px solid transparent;
+  transition: color .14s, background .14s;
+}
+
+.oc__toc-link::before {
+  content: "";
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: .32;
+  flex: none;
+}
+
+.oc__toc-link:hover {
+  color: var(--text-hi);
+  background: rgba(255,255,255,.03);
+}
+
+.oc__toc-link.is-active {
+  color: #fff;
+  background: rgba(255,107,62,.1);
+  border-left-color: var(--accent);
+}
+
+.oc__toc-link.is-active::before {
+  background: var(--accent);
+  opacity: 1;
+}
+
+.oc-sec {
+  padding: 34px 0;
+  border-top: 1px solid var(--rule);
+  scroll-margin-top: 80px;
+}
+
+.oc-sec:first-child {
+  border-top: none;
+  padding-top: 6px;
+}
+
+.oc-sec__eyebrow {
+  font-family: var(--font-ui);
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--brand-orange);
+  margin-bottom: 11px;
+}
+
+.oc-sec__title {
+  font-family: var(--font-display);
+  font-size: clamp(24px,3vw,34px);
+  font-weight: 500;
+  letter-spacing: -.02em;
+  color: #fff;
+}
+
+.oc-sec__desc {
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink-dim);
+  max-width: 64ch;
+  margin-top: 8px;
+}
+
+.oc-demo {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--rule);
+  border-radius: var(--r-card);
+  background: rgba(255,255,255,.015);
+  overflow: hidden;
+}
+
+.oc-demo__label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .02em;
+  text-transform: uppercase;
+  color: var(--text-lo);
+  padding: 9px 14px;
+  border-top: 1px solid var(--rule);
+  background: rgba(0,0,0,.25);
+}

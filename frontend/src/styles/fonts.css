@@ -1,0 +1,61 @@
+@font-face {
+  font-family: "Oktah Neue";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/oktah_neue_medium.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Oktah Neue";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/oktah_neue_semibold.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Oktah Neue";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/oktah_neue_bold.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "afAnotherSans";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/afAnotherSans-Regular.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "oktah-glyph-fix";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: block;
+  src: local("Geist"),
+       local("Inter"),
+       local("Helvetica Neue"),
+       local("HelveticaNeue"),
+       local("Arial"),
+       local("Roboto"),
+       local("Segoe UI"),
+       local("SegoeUI"),
+       local("-apple-system"),
+       local("BlinkMacSystemFont"),
+       local("system-ui"),
+       local("sans-serif");
+  unicode-range: U+002D, U+2013, U+2014, U+0030-0039, U+003C, U+003E, U+0025, U+0026;
+}
+
+:root {
+  --font-oktah-base: "Oktah Neue";
+  --font-oktah-neue: "oktah-glyph-fix", var(--font-oktah-base);
+
+  --font-display: var(--font-oktah-neue), "Geist", "Helvetica Neue", Arial, sans-serif;
+  --font-body:    "afAnotherSans", "Geist", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-ui:      "Source Sans 3", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-serif:   "Instrument Serif", "Times New Roman", serif;
+  --font-sans:    "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono:    ui-monospace, "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+}

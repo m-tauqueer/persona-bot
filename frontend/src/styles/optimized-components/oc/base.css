@@ -1,0 +1,56 @@
+.oc {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  color: var(--text-hi);
+  --glass-card: rgba(22,22,26,.42);
+  --oc-gut: 32px;
+}
+
+.oc::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 84% 98%,rgba(120,48,22,.18),transparent 55%), #000;
+}
+
+.oc::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: var(--grain-tex);
+  background-size: 200px 200px;
+  opacity: .1;
+}
+
+.oc .ui-card--glass::after,
+.oc .lead::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 0;
+  background-image: var(--grain-tex);
+  background-size: 170px 170px;
+  opacity: .18;
+  mix-blend-mode: overlay;
+}
+
+.oc.font-modern {
+  --font-display: "Bricolage Grotesque", "Geist", "Helvetica Neue", sans-serif;
+  --font-body: "Hanken Grotesk", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-ui: "Hanken Grotesk", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-sans: "Hanken Grotesk", "Geist", -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+
+.oc.font-geist {
+  --font-display: "Geist", sans-serif;
+  --font-body: "Geist", sans-serif;
+  --font-ui: "Geist", sans-serif;
+}

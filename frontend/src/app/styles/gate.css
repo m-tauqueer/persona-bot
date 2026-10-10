@@ -1,0 +1,61 @@
+.mc-gate {
+  min-height: 100vh;
+  position: relative;
+  padding: 32px 20px 72px;
+  color: var(--text-hi);
+  font-family: var(--font-body);
+}
+
+.mc-gate__inner {
+  position: relative;
+  z-index: 1;
+  max-width: 840px;
+  margin: 0 auto;
+  display: grid;
+  gap: 18px;
+}
+
+.mc-gate__brand {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  color: var(--text-mid);
+}
+
+.mc-gate__title {
+  margin: 0 0 8px;
+}
+
+.mc-gate__body {
+  color: var(--text-mid);
+  margin: 0 0 18px;
+}
+
+.mc-cookie {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  left: 16px;
+  z-index: 40;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.mc-cookie__card {
+  pointer-events: auto;
+  max-width: 720px;
+  width: 100%;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.mc-cookie__body {
+  color: var(--text-mid);
+  margin: 0;
+  flex: 1 1 240px;
+}

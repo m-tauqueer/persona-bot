@@ -1,0 +1,17 @@
+FROM node:22-alpine AS build
+WORKDIR /app
+COPY package.json package-lock.json ./
+COPY frontend/package.json frontend/
+COPY gateway/package.json gateway/
+RUN npm ci
+COPY frontend frontend
+COPY infra/azure/.build.env .env
+RUN npm run build -w frontend
+
+FROM nginx:1.27-alpine
+COPY --from=build /app/frontend/dist /usr/share/nginx/html
+COPY infra/azure/nginx/default.conf.template /etc/nginx/templates/default.conf.template
+COPY infra/azure/nginx/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+EXPOSE 80
+ENTRYPOINT ["/entrypoint.sh"]

@@ -1,0 +1,48 @@
+# Environment
+.env
+.env.*
+!.env.example
+
+# Node
+node_modules/
+dist/
+dist-ssr/
+*.tsbuildinfo
+.vite/
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+.uv/
+uv.lock.bak
+
+# Logs
+*.log
+npm-debug.log*
+
+# Editors / OS
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+
+# Coverage
+coverage/
+htmlcov/
+.coverage
+
+# Agent local scratch
+.claude/settings.local.json
+.claude/launch.json
+
+# Azure deploy scratch (names, generated secrets, baked Vite env)
+infra/azure/env
+infra/azure/.state
+infra/azure/.tmp/
+infra/azure/.build.env
