@@ -52,20 +52,21 @@ def _payload(
     history: list[HistoryTurn],
     question: str,
     voice_config: dict[str, Any],
+    reply_mode: str | None = None,
 ) -> str:
-    return json.dumps(
-        {
-            settings.answer_payload_persona_memories_key: persona_memories,
-            settings.answer_payload_caller_memories_key: caller_memories,
-            settings.answer_payload_persona_identity_key: persona_identity,
-            settings.answer_payload_history_key: [
-                {"speaker": turn.speaker, "text": turn.text} for turn in history
-            ],
-            settings.answer_payload_question_key: question,
-            settings.answer_payload_voice_config_key: voice_config,
-        },
-        ensure_ascii=False,
-    )
+    payload = {
+        settings.answer_payload_persona_memories_key: persona_memories,
+        settings.answer_payload_caller_memories_key: caller_memories,
+        settings.answer_payload_persona_identity_key: persona_identity,
+        settings.answer_payload_history_key: [
+            {"speaker": turn.speaker, "text": turn.text} for turn in history
+        ],
+        settings.answer_payload_question_key: question,
+        settings.answer_payload_voice_config_key: voice_config,
+    }
+    if reply_mode is not None:
+        payload[settings.conversation_decisions_hint_key] = reply_mode
+    return json.dumps(payload, ensure_ascii=False)
 
 
 class Answerer:
@@ -101,6 +102,7 @@ class Answerer:
         history: list[HistoryTurn],
         question: str,
         voice_config: dict[str, Any],
+        reply_mode: str | None = None,
     ) -> tuple[str, list[dict[str, str]]]:
         persona = _kept(persona_memories)
         caller = _kept(caller_memories)
@@ -119,6 +121,20 @@ class Answerer:
             limit=limit,
         )
         system = self._settings.answer_system_prompt or DEFAULT_ANSWER_SYSTEM_PROMPT
+        if reply_mode is not None:
+            if reply_mode not in {
+                self._settings.conversation_decisions_answer_value,
+                self._settings.conversation_decisions_acknowledge_value,
+            }:
+                raise ReframeError("invalid reply mode")
+            instructions = (
+                self._settings.conversation_decisions_generation_instructions.format(
+                    hint_key=self._settings.conversation_decisions_hint_key,
+                    answer=self._settings.conversation_decisions_answer_value,
+                    acknowledge=self._settings.conversation_decisions_acknowledge_value,
+                )
+            )
+            system = f"{system}\n\n{instructions}"
         model = self._settings.openai_model
         if not model:
             raise ReframeUnavailableError("OPENAI_MODEL is not set")
@@ -134,6 +150,7 @@ class Answerer:
                     recent,
                     question,
                     voice_config,
+                    reply_mode,
                 ),
             },
         ]
@@ -147,6 +164,7 @@ class Answerer:
         history: list[HistoryTurn],
         question: str,
         voice_config: dict[str, Any],
+        reply_mode: str | None = None,
     ) -> str:
         model, request = self._request(
             persona_memories=persona_memories,
@@ -155,6 +173,7 @@ class Answerer:
             history=history,
             question=question,
             voice_config=voice_config,
+            reply_mode=reply_mode,
         )
         try:
             completion = self._client.chat.completions.create(
@@ -185,6 +204,7 @@ class Answerer:
         history: list[HistoryTurn],
         question: str,
         voice_config: dict[str, Any],
+        reply_mode: str | None = None,
     ) -> Iterator[str]:
         model, request = self._request(
             persona_memories=persona_memories,
@@ -193,6 +213,7 @@ class Answerer:
             history=history,
             question=question,
             voice_config=voice_config,
+            reply_mode=reply_mode,
         )
         try:
             stream = self._client.chat.completions.create(

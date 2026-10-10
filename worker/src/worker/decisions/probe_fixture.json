@@ -1,0 +1,154 @@
+[
+  {
+    "id": "persona-knowledge",
+    "question": "What is the solar telescope you were taught about?",
+    "expected": "shared",
+    "history": [],
+    "persona_identity": {
+      "name": "Ada",
+      "description": "An owner-taught astronomy persona."
+    }
+  },
+  {
+    "id": "persona-identity",
+    "question": "Who are you?",
+    "expected": "shared",
+    "history": [],
+    "persona_identity": {
+      "name": "Ada",
+      "description": "An owner-taught astronomy persona."
+    }
+  },
+  {
+    "id": "caller-recall",
+    "question": "What instrument did I say I play?",
+    "expected": "private",
+    "history": [],
+    "persona_identity": {
+      "name": "Ada",
+      "description": "An owner-taught astronomy persona."
+    }
+  },
+  {
+    "id": "mixed",
+    "question": "Compare my instrument with the telescope you know about.",
+    "expected": "both",
+    "history": [],
+    "persona_identity": {
+      "name": "Ada",
+      "description": "An owner-taught astronomy persona."
+    }
+  },
+  {
+    "id": "ambiguous",
+    "question": "Tell me more about that.",
+    "expected": "both",
+    "history": [],
+    "persona_identity": {
+      "name": "Ada",
+      "description": "An owner-taught astronomy persona."
+    }
+  },
+  {
+    "id": "shared-followup",
+    "question": "When was it built?",
+    "expected": "shared",
+    "history": [
+      {
+        "speaker": "user",
+        "text": "Tell me about the solar telescope."
+      },
+      {
+        "speaker": "persona",
+        "text": "It is a research telescope."
+      }
+    ],
+    "persona_identity": {
+      "name": "Ada",
+      "description": "An owner-taught astronomy persona."
+    }
+  },
+  {
+    "id": "caller-followup",
+    "question": "When did I start it?",
+    "expected": "private",
+    "history": [
+      {
+        "speaker": "user",
+        "text": "Do you remember my violin lessons?"
+      },
+      {
+        "speaker": "persona",
+        "text": "You mentioned taking violin lessons."
+      }
+    ],
+    "persona_identity": {
+      "name": "Ada",
+      "description": "An owner-taught astronomy persona."
+    }
+  },
+  {
+    "id": "correction",
+    "question": "Actually I play cello now. What instrument do I play?",
+    "expected": "private",
+    "history": [
+      {
+        "speaker": "user",
+        "text": "I used to play violin."
+      }
+    ],
+    "persona_identity": {
+      "name": "Ada",
+      "description": "An owner-taught astronomy persona."
+    }
+  },
+  {
+    "id": "quoted-persona",
+    "question": "Explain your taught quote: \"I built a telescope.\"",
+    "expected": "shared",
+    "history": [],
+    "persona_identity": {
+      "name": "Ada",
+      "description": "An owner-taught astronomy persona."
+    }
+  },
+  {
+    "id": "quoted-caller",
+    "question": "I quoted my teacher saying \"I play violin\". What instrument did I tell you I personally play?",
+    "expected": "private",
+    "history": [],
+    "persona_identity": {
+      "name": "Ada",
+      "description": "An owner-taught astronomy persona."
+    }
+  },
+  {
+    "id": "no-context",
+    "question": "Can you help me with it?",
+    "expected": "both",
+    "history": [],
+    "persona_identity": {
+      "name": "Ada",
+      "description": "An owner-taught astronomy persona."
+    }
+  },
+  {
+    "id": "mixed-followup",
+    "question": "How does that compare with mine?",
+    "expected": "both",
+    "history": [
+      {
+        "speaker": "user",
+        "text": "Tell me about your taught telescope and the one I told you I own."
+      },
+      {
+        "speaker": "persona",
+        "text": "They are different telescope designs."
+      }
+    ],
+    "persona_identity": {
+      "name": "Ada",
+      "description": "An owner-taught astronomy persona."
+    }
+  }
+]

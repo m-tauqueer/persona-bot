@@ -9,8 +9,12 @@ from pydantic import Field, HttpUrl, field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from worker.decisions.defaults import (
+    DEFAULT_ACKNOWLEDGE_DESCRIPTION,
+    DEFAULT_ANSWER_DESCRIPTION,
     DEFAULT_BOTH_DESCRIPTION,
+    DEFAULT_CONVERSATION_INSTRUCTIONS,
     DEFAULT_PRIVATE_DESCRIPTION,
+    DEFAULT_REPLY_MODE_INSTRUCTIONS,
     DEFAULT_SCOPE_INSTRUCTIONS,
     DEFAULT_SHARED_DESCRIPTION,
 )
@@ -81,30 +85,24 @@ class WorkerSettings(BaseSettings):
     )
     failure_message_engram: str = Field(
         default=(
-            "The persona's memory is unavailable. "
-            "Nothing was invented in its place."
+            "The persona's memory is unavailable. Nothing was invented in its place."
         ),
         min_length=1,
     )
     failure_message_speaking_llm: str = Field(
         default=(
-            "The reply stopped early. "
-            "You heard only the words that were produced."
+            "The reply stopped early. You heard only the words that were produced."
         ),
         min_length=1,
     )
     failure_message_record: str = Field(
         default=(
-            "The reply was delivered but the conversation record "
-            "could not be saved."
+            "The reply was delivered but the conversation record could not be saved."
         ),
         min_length=1,
     )
     failure_message_database: str = Field(
-        default=(
-            "The conversation record is unavailable. "
-            "This turn could not start."
-        ),
+        default=("The conversation record is unavailable. This turn could not start."),
         min_length=1,
     )
     ops_service_worker: str = Field(default="worker", min_length=1)
@@ -128,7 +126,9 @@ class WorkerSettings(BaseSettings):
             "retrieve_hits_shared_dropped,retrieve_hits_private,"
             "retrieve_hits_private_grounded,retrieve_hits_private_dropped,"
             "member_authenticated,engram_credential,"
-            "retrieve_scope,retrieve_scope_reason"
+            "retrieve_scope,retrieve_scope_reason,scope_backend,scope_mode,scope_choice,"
+            "scope_confidence,scope_duration_ms,scope_wait_ms,reply_requested,reply_mode,"
+            "reply_reason,reply_confidence,conversation_mode,reply_candidate,reply_candidate_reason"
         ),
         min_length=1,
     )
@@ -318,7 +318,9 @@ class WorkerSettings(BaseSettings):
     decisions_base_url: HttpUrl | None = None
     decisions_model: str = Field(default="gpt-6-luna", min_length=1)
     decisions_timeout_seconds: float | None = Field(
-        default=None, gt=0, allow_inf_nan=False,
+        default=None,
+        gt=0,
+        allow_inf_nan=False,
     )
     # Retries would exceed the per-turn request budget. Explicitly reject them.
     decisions_max_retries: Literal[0] = 0
@@ -326,33 +328,107 @@ class WorkerSettings(BaseSettings):
     decisions_history_turns: int = Field(default=24, ge=0)
     decisions_input_max_bytes: int = Field(default=16384, gt=0)
     decisions_scope_min_confidence: float | None = Field(
-        default=None, ge=0, le=1, allow_inf_nan=False,
+        default=None,
+        ge=0,
+        le=1,
+        allow_inf_nan=False,
+    )
+    conversation_decisions_mode: Literal["off", "shadow", "active"] = "off"
+    conversation_decisions_min_confidence: float | None = Field(
+        default=None,
+        ge=0,
+        le=1,
+        allow_inf_nan=False,
+    )
+    conversation_decisions_question_name: str = Field(
+        default="reply_mode", min_length=1
+    )
+    conversation_decisions_answer_value: str = Field(default="answer", min_length=1)
+    conversation_decisions_acknowledge_value: str = Field(
+        default="acknowledge", min_length=1
+    )
+    conversation_decisions_instructions: str = Field(
+        default=DEFAULT_CONVERSATION_INSTRUCTIONS, min_length=1
+    )
+    conversation_decisions_answer_description: str = Field(
+        default=DEFAULT_ANSWER_DESCRIPTION, min_length=1
+    )
+    conversation_decisions_acknowledge_description: str = Field(
+        default=DEFAULT_ACKNOWLEDGE_DESCRIPTION, min_length=1
+    )
+    conversation_decisions_hint_key: str = Field(default="reply_mode", min_length=1)
+    conversation_decisions_generation_instructions: str = Field(
+        default=DEFAULT_REPLY_MODE_INSTRUCTIONS, min_length=1
+    )
+    conversation_decisions_reason_answer: str = Field(
+        default="reply_answer", min_length=1
+    )
+    conversation_decisions_reason_acknowledge: str = Field(
+        default="reply_acknowledge", min_length=1
+    )
+    conversation_decisions_reason_disabled: str = Field(
+        default="reply_disabled", min_length=1
+    )
+    conversation_decisions_reason_shadow: str = Field(
+        default="reply_shadow", min_length=1
+    )
+    conversation_decisions_reason_chat: str = Field(default="reply_chat", min_length=1)
+    conversation_decisions_reason_ineligible: str = Field(
+        default="reply_ineligible", min_length=1
+    )
+    conversation_decisions_reason_timeout: str = Field(
+        default="reply_timeout", min_length=1
+    )
+    conversation_decisions_reason_refusal: str = Field(
+        default="reply_refusal", min_length=1
+    )
+    conversation_decisions_reason_malformed: str = Field(
+        default="reply_malformed", min_length=1
+    )
+    conversation_decisions_reason_error: str = Field(
+        default="reply_error", min_length=1
+    )
+    conversation_decisions_reason_saturated: str = Field(
+        default="reply_saturated", min_length=1
+    )
+    conversation_decisions_reason_input_too_large: str = Field(
+        default="reply_input_too_large", min_length=1
+    )
+    conversation_decisions_reason_low_confidence: str = Field(
+        default="reply_low_confidence", min_length=1
     )
     decisions_scope_question_name: str = Field(default="memory_scope", min_length=1)
     decisions_scope_instructions: str = Field(
-        default=DEFAULT_SCOPE_INSTRUCTIONS, min_length=1,
+        default=DEFAULT_SCOPE_INSTRUCTIONS,
+        min_length=1,
     )
     decisions_scope_shared_description: str = Field(
-        default=DEFAULT_SHARED_DESCRIPTION, min_length=1,
+        default=DEFAULT_SHARED_DESCRIPTION,
+        min_length=1,
     )
     decisions_scope_private_description: str = Field(
-        default=DEFAULT_PRIVATE_DESCRIPTION, min_length=1,
+        default=DEFAULT_PRIVATE_DESCRIPTION,
+        min_length=1,
     )
     decisions_scope_both_description: str = Field(
-        default=DEFAULT_BOTH_DESCRIPTION, min_length=1,
+        default=DEFAULT_BOTH_DESCRIPTION,
+        min_length=1,
     )
     decisions_context_history_key: str = Field(default="history", min_length=1)
     decisions_context_identity_key: str = Field(
-        default="persona_identity", min_length=1,
+        default="persona_identity",
+        min_length=1,
     )
     decisions_context_state_key: str = Field(default="app_state", min_length=1)
     decisions_reason_low_confidence: str = Field(
-        default="low_confidence", min_length=1,
+        default="low_confidence",
+        min_length=1,
     )
     decisions_reason_refusal: str = Field(default="refusal", min_length=1)
     decisions_reason_saturated: str = Field(default="saturated", min_length=1)
     decisions_reason_input_too_large: str = Field(
-        default="input_too_large", min_length=1,
+        default="input_too_large",
+        min_length=1,
     )
     decisions_reason_shadow: str = Field(default="shadow", min_length=1)
     decisions_log_event: str = Field(default="memory scope decision", min_length=1)
@@ -415,9 +491,7 @@ class WorkerSettings(BaseSettings):
         min_length=1,
     )
     probe_chat_mode_skip: str = Field(
-        default=(
-            "BRAIN_MODE=chat refused while ENGRAM_MEMBER_SESSION_AUTH is false."
-        ),
+        default=("BRAIN_MODE=chat refused while ENGRAM_MEMBER_SESSION_AUTH is false."),
         min_length=1,
     )
     persona_error_not_found: str = Field(default="persona not found", min_length=1)
@@ -436,9 +510,7 @@ class WorkerSettings(BaseSettings):
         min_length=1,
     )
     admin_error_forget_private_confirmation: str = Field(
-        default=(
-            "type the persona handle exactly to forget that private pool"
-        ),
+        default=("type the persona handle exactly to forget that private pool"),
         min_length=1,
     )
     admin_error_user_missing: str = Field(
@@ -615,9 +687,7 @@ class WorkerSettings(BaseSettings):
     @classmethod
     def turn_fields_required(cls, value: str) -> str:
         fields = {
-            item.strip()
-            for item in value.replace("\n", ",").split(",")
-            if item.strip()
+            item.strip() for item in value.replace("\n", ",").split(",") if item.strip()
         }
         if "correlation_id" not in fields or "session_id" not in fields:
             raise ValueError(
@@ -630,6 +700,7 @@ class WorkerSettings(BaseSettings):
         "decisions_base_url",
         "decisions_timeout_seconds",
         "decisions_scope_min_confidence",
+        "conversation_decisions_min_confidence",
         "engram_api_key",
         "engram_org_id",
         "engram_persona_id",
@@ -741,9 +812,7 @@ class WorkerSettings(BaseSettings):
             self.engram_writeback_reason_write_failed,
         }
         if len(writeback_reasons) != 4:
-            raise ValueError(
-                "ENGRAM_WRITEBACK reason codes must be distinct"
-            )
+            raise ValueError("ENGRAM_WRITEBACK reason codes must be distinct")
         return self
 
     @model_validator(mode="after")
@@ -814,9 +883,7 @@ class WorkerSettings(BaseSettings):
             self.engram_scope_router_reason_unauthenticated,
         }
         if len(reasons) != 8:
-            raise ValueError(
-                "ENGRAM_SCOPE_ROUTER reason codes must be distinct"
-            )
+            raise ValueError("ENGRAM_SCOPE_ROUTER reason codes must be distinct")
         scopes = {
             self.engram_retrieve_scope_shared,
             self.engram_retrieve_scope_private,
@@ -863,13 +930,66 @@ class WorkerSettings(BaseSettings):
             and self.engram_scope_router_backend == "decisions"
             and self.decisions_scope_mode != "off"
         )
-        if on and not (self.decisions_api_key or self.openai_api_key):
+        conversation_on = (
+            self.conversation_decisions_mode != "off" and self.brain_mode == "retrieve"
+        )
+        if (on or conversation_on) and not (
+            self.decisions_api_key or self.openai_api_key
+        ):
             raise ValueError("Decisions requires DECISIONS_API_KEY or OPENAI_API_KEY")
         if on and self.decisions_scope_mode == "active":
             if self.decisions_scope_min_confidence is None:
                 raise ValueError(
                     "Active Decisions requires a calibrated scope threshold"
                 )
+        if (
+            self.decisions_scope_question_name
+            == self.conversation_decisions_question_name
+        ):
+            raise ValueError("Decisions question names must be distinct")
+        if (
+            self.conversation_decisions_answer_value
+            == self.conversation_decisions_acknowledge_value
+        ):
+            raise ValueError("Conversation choices must be distinct")
+        if conversation_on and self.conversation_decisions_mode == "active":
+            if self.conversation_decisions_min_confidence is None:
+                raise ValueError(
+                    "Active conversation Decisions requires a calibrated threshold"
+                )
+        payload_keys = {
+            self.answer_payload_persona_memories_key,
+            self.answer_payload_caller_memories_key,
+            self.answer_payload_persona_identity_key,
+            self.answer_payload_history_key,
+            self.answer_payload_question_key,
+            self.answer_payload_voice_config_key,
+        }
+        if self.conversation_decisions_hint_key in payload_keys:
+            raise ValueError(
+                "Conversation hint must not overwrite answer payload fields"
+            )
+        conversation_reasons = [
+            getattr(self, name)
+            for name in type(self).model_fields
+            if name.startswith("conversation_decisions_reason_")
+        ]
+        if len(set(conversation_reasons)) != len(conversation_reasons):
+            raise ValueError("Conversation reason codes must be distinct")
+        if set(conversation_reasons) & (extra_reasons | existing_reasons):
+            raise ValueError("Conversation and scope reason codes must be distinct")
+        try:
+            rendered = self.conversation_decisions_generation_instructions.format(
+                hint_key=self.conversation_decisions_hint_key,
+                answer=self.conversation_decisions_answer_value,
+                acknowledge=self.conversation_decisions_acknowledge_value,
+            )
+        except (KeyError, ValueError, IndexError) as exc:
+            raise ValueError(
+                "Invalid conversation generation instruction template"
+            ) from exc
+        if not rendered.strip():
+            raise ValueError("Conversation generation instructions must not be empty")
         return self
 
     @model_validator(mode="after")

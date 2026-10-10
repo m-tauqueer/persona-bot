@@ -1,0 +1,174 @@
+[
+  {
+    "id": "thanks",
+    "question": "Thanks, that helped.",
+    "expected_reply": "acknowledge",
+    "expected_scope": "both",
+    "history": [],
+    "persona_identity": {
+      "name": "Ada",
+      "description": "An owner-taught astronomy persona."
+    }
+  },
+  {
+    "id": "new-fact",
+    "question": "I started violin lessons this month.",
+    "expected_reply": "acknowledge",
+    "expected_scope": "private",
+    "history": [],
+    "persona_identity": {
+      "name": "Ada",
+      "description": "An owner-taught astronomy persona."
+    }
+  },
+  {
+    "id": "emotion",
+    "question": "I am sad that my friend moved away.",
+    "expected_reply": "acknowledge",
+    "expected_scope": "both",
+    "history": [],
+    "persona_identity": {
+      "name": "Ada",
+      "description": "An owner-taught astronomy persona."
+    }
+  },
+  {
+    "id": "mixed-question",
+    "question": "I started violin lessons. What instrument did I tell you I played before?",
+    "expected_reply": "answer",
+    "expected_scope": "private",
+    "history": [],
+    "persona_identity": {
+      "name": "Ada",
+      "description": "An owner-taught astronomy persona."
+    }
+  },
+  {
+    "id": "persona-question",
+    "question": "What do you know about solar telescopes?",
+    "expected_reply": "answer",
+    "expected_scope": "shared",
+    "history": [],
+    "persona_identity": {
+      "name": "Ada",
+      "description": "An owner-taught astronomy persona."
+    }
+  },
+  {
+    "id": "correction",
+    "question": "Actually I play cello, not violin.",
+    "expected_reply": "acknowledge",
+    "expected_scope": "private",
+    "history": [],
+    "persona_identity": {
+      "name": "Ada",
+      "description": "An owner-taught astronomy persona."
+    }
+  },
+  {
+    "id": "correction-request",
+    "question": "Actually I play cello now. Can you summarize what changed?",
+    "expected_reply": "answer",
+    "expected_scope": "private",
+    "history": [],
+    "persona_identity": {
+      "name": "Ada",
+      "description": "An owner-taught astronomy persona."
+    }
+  },
+  {
+    "id": "confirmation-request",
+    "question": "Yes, please.",
+    "expected_reply": "answer",
+    "expected_scope": "shared",
+    "history": [
+      {
+        "speaker": "user",
+        "text": "Can you explain solar telescopes?"
+      },
+      {
+        "speaker": "persona",
+        "text": "Would you like an explanation of how they work?"
+      }
+    ],
+    "persona_identity": {
+      "name": "Ada",
+      "description": "An owner-taught astronomy persona."
+    }
+  },
+  {
+    "id": "confirmation-social",
+    "question": "Yes.",
+    "expected_reply": "acknowledge",
+    "expected_scope": "both",
+    "history": [
+      {
+        "speaker": "user",
+        "text": "That was useful."
+      },
+      {
+        "speaker": "persona",
+        "text": "I am glad it helped."
+      }
+    ],
+    "persona_identity": {
+      "name": "Ada",
+      "description": "An owner-taught astronomy persona."
+    }
+  },
+  {
+    "id": "quoted-dialogue",
+    "question": "Explain why someone might say \"thanks\" sarcastically.",
+    "expected_reply": "answer",
+    "expected_scope": "both",
+    "history": [],
+    "persona_identity": {
+      "name": "Ada",
+      "description": "An owner-taught astronomy persona."
+    }
+  },
+  {
+    "id": "ambiguous",
+    "question": "Okay?",
+    "expected_reply": "answer",
+    "expected_scope": "both",
+    "history": [],
+    "persona_identity": {
+      "name": "Ada",
+      "description": "An owner-taught astronomy persona."
+    }
+  },
+  {
+    "id": "farewell",
+    "question": "Goodbye, it was nice talking to you.",
+    "expected_reply": "acknowledge",
+    "expected_scope": "both",
+    "history": [],
+    "persona_identity": {
+      "name": "Ada",
+      "description": "An owner-taught astronomy persona."
+    }
+  },
+  {
+    "id": "disclosure-request",
+    "question": "I am sad about my friend leaving. What can I do to cope?",
+    "expected_reply": "answer",
+    "expected_scope": "both",
+    "history": [],
+    "persona_identity": {
+      "name": "Ada",
+      "description": "An owner-taught astronomy persona."
+    }
+  },
+  {
+    "id": "caller-question",
+    "question": "What instrument did I say I play?",
+    "expected_reply": "answer",
+    "expected_scope": "private",
+    "history": [],
+    "persona_identity": {
+      "name": "Ada",
+      "description": "An owner-taught astronomy persona."
+    }
+  }
+]

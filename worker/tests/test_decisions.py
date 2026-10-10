@@ -4,7 +4,7 @@ from types import SimpleNamespace
 
 import httpx
 import pytest
-from openai import APITimeoutError
+from openai import APIStatusError, APITimeoutError
 
 from worker.config import WorkerSettings
 from worker.decisions.client import DecisionsClient, decode_choice, scope_question
@@ -57,6 +57,7 @@ def test_named_answers_and_confidence_are_distinct(settings: WorkerSettings) -> 
         lambda a: a.update(choice="someone-elses-pool"),
         lambda a: a.update(confidence=float("nan")),
         lambda a: a.update(confidence=float("inf")),
+        lambda a: a.update(confidence=10**500),
         lambda a: a.update(confidence=True),
         lambda a: a.update(confidence="0.99"),
         lambda a: a.update(type="score"),
@@ -100,6 +101,22 @@ def test_request_only_sends_supported_provider_fields(settings):
     "error,outcome",
     [
         (RuntimeError("never-log-input-or-key"), "unavailable"),
+        *[
+            (
+                APIStatusError(
+                    "do-not-log-provider-body",
+                    response=httpx.Response(
+                        status,
+                        request=httpx.Request(
+                            "POST", "https://api.openai.com/v1/decisions"
+                        ),
+                    ),
+                    body={"input": "do-not-log"},
+                ),
+                "unavailable",
+            )
+            for status in (401, 429, 500)
+        ],
         (
             APITimeoutError(
                 httpx.Request("POST", "https://api.openai.com/v1/decisions")

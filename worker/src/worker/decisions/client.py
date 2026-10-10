@@ -42,7 +42,9 @@ def scope_question(settings: WorkerSettings) -> ChoiceQuestion:
 
 
 def _probability(value: object) -> bool:
-    return type(value) in (int, float) and math.isfinite(value) and 0 <= value <= 1
+    if type(value) not in (int, float) or not 0 <= value <= 1:
+        return False
+    return math.isfinite(value)
 
 
 def decode_choice(payload: Any, question: ChoiceQuestion) -> ChoiceResult:
