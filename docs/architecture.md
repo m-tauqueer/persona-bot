@@ -2,6 +2,11 @@
 
 Technical Requirements & Design. This is the source of truth for **how** the system is built. Owner: Tauqueer. Why a choice was made: [decisions/](decisions/README.md). Snapshot: [progress.md](progress.md). Map: [README.md](README.md). Companions: [PRD](archive/prd.md), [ENGRAM](architecture/memory.md), [current work](plans/caller-memory.md), [personas](archive/phase-5-plan.md), [index](progress.md).
 
+Memory routing extension (10 Oct 2026): [OpenAI Decisions](plans/openai-decisions.md) Phase 1
+is implemented and disabled by default. Conversational answer/acknowledge code is also implemented and disabled by default.
+[Validation](tests/decisions-memory-routing.md) separates API calibration from pending product
+and latency acceptance.
+
 ---
 
 ## 1. Locked decisions
@@ -23,6 +28,16 @@ Every decision below is confirmed. Do not silently change any of them; if realit
 - **Engram is the brain and the memory.** Which Engram call answers a turn is now config (`BRAIN_MODE`), and both paths keep memory in Engram:
   - **`chat`.** One `personas.chat` per turn; it retrieves shared + caller-private, grounds, and returns the reply, and writes the caller's private pool itself. Measured ~11s of Engram-side generation per turn.
   - **`retrieve` (default).** Two scoped `retrieve` calls in parallel (shared + private, each with its own `top_k`); a small structured classifier runs **beside** those reads (never in front) and may drop one labelled list before the answer model runs. The answerer composes from `persona_identity`, `persona_memories`, `caller_memories`, and speaker-labelled sitting `history` (Postgres; window from config). It does **not** `personas.converse` the sitting into private. After the reply, a write-back thread extracts caller facts (structured JSON) and writes each as `personas.private(pid).text` on the **member JWT**. Empty facts is success; timeout, error, or unrecognised JSON writes nothing extra. First word is unchanged. When the sitting ends (`ended_at` on End call, socket close, or `/chat` End chat), a second pass of the same extractor runs over the size-capped transcript on a writer thread; the client does not wait. Hang-up twice is a no-op (`sessions.closing_pass_at`). Extractor error after the configured retry writes nothing extra (never dumps). SDK 0.4.0 `personas.retrieve` is shared-only on backend 0.5.0; we post `scope` ourselves. The classifier is off until `ENGRAM_SCOPE_ROUTER_ENABLED` is true; timeout, error, or an unrecognised value falls open to both pools. Measured ~2.5s to first word, ~4s on a live spoken call (before the second retrieve; the extra retrieve and the classifier share that window so added latency is overrun past Engram, not a new round trip).
+  Optional Decisions routing: `ENGRAM_SCOPE_ROUTER_BACKEND=decisions` selects a separate warm
+  OpenAI connection (`DECISIONS_API_KEY`, falling back to `OPENAI_API_KEY`; speaking base URLs
+  are never inherited). Master switch false or `DECISIONS_SCOPE_MODE=off` sends no question.
+  Shadow classifies same-sitting history/persona identity asynchronously and keeps both authorized
+  lists; active waits only to the absolute deadline and narrows after `may_ground`. Low confidence,
+  refusal, bad output, timeout, oversized input, and capacity exhaustion keep both authorized lists.
+  Input bytes/history and queued+running work are bounded; SDK retries are zero. Members without
+  private credentials skip classification and retain shared-only retrieval. Active startup requires
+  a configured threshold; owner approval of the candidate remains a rollout gate. Scope/reason
+  use existing persistence; confidence/duration/wait are allowlisted log metadata, not new DB columns.
   The controller gates speak/silence on whichever result comes back. `retrieve` became the default after a side-by-side run (`npm run brains`) showed it equal or better on memory recall, private recall, conversational continuity and refusing to invent when memory does not cover the question — at a quarter of the latency. `chat` remains available as a switch.
 - **The speaking LLM** (config-pluggable, default `gpt-4o-mini`) always runs, streamed so speech starts on the first token. It sees the last N turns (config `reframe_history_turns`) plus persona voice rules. Long-term facts are locked to Engram's labelled lists; this sitting is Postgres history:
   - Under `chat` it is the **reframer**: it paraphrases Engram's composed reply.
@@ -31,6 +46,26 @@ Every decision below is confirmed. Do not silently change any of them; if realit
 - Pools: **persona shared + per-(user, persona) private**. **One Engram `session_id` per sitting** (one Postgres session with that persona on one channel). A later sitting mints a new thread id; long-term recall is the private pool, not that thread. Chat and voice do not share one Engram `session_id`. The retrieve path writes extracted caller facts as private text; it does not converse the sitting. The per-turn pass extracts the newest exchange only; the hang-up pass sweeps the sitting for what only the whole sitting reveals. Writes are append-only and date-stamped, so a correction adds a newer row rather than removing the stale one, and the answerer prefers the later-stated of two conflicting caller memories. The `chat` switch still writes both sides inside Engram and stays off. Do not write product chats into `{org}:{user}`.
 - **Text-only into Engram** (audio is never sent to Engram).
 - **Engram down = product down** for the first build.
+
+Optional reply mode (`CONVERSATION_DECISIONS_MODE=off|shadow|active`) applies only to eligible
+retrieve turns after the existing controller and narrowed-empty handling. Chat mode explicitly
+skips it. Conversation classification is independent of the scope master switch and can run for
+shared-only callers. When both Decisions features run, one named-question bundle uses one
+capacity slot and one absolute deadline alongside retrieval. Each answer is decoded independently.
+Shadow-only bundles never wait. An active feature waits only within the remaining request budget.
+
+Active acknowledge requires calibrated confidence; failures, low confidence, and uncertain intent
+use normal answer mode. Neither mode changes `Action.SPEAK`/`SILENCE`, authorizes memory, or
+revives an empty/error/refused turn. Reply mode is a generation hint for both blocking/streaming
+answerer paths. Maintained instructions are appended even when `ANSWER_SYSTEM_PROMPT` is
+customized; feature off omits the hint and keeps the original prompt/payload. Acknowledge is natural
+and brief, preserves grounding/style, and does not claim a memory write, add unrelated advice, or
+ask an unsolicited follow-up. There is one speaking call and the same Fish/Aura streaming path.
+
+`TurnPlan` holds an immutable reply decision local to that turn; late callbacks only log captured
+ids. Turn logs distinguish requested/candidate/applied mode and fallback. Applied mode/reason
+are appended to existing `controller_reasons`; actual generated utterances still persist and feed
+caller-fact extraction/closing. No schema migration. [Evidence and rollout gates](tests/decisions-conversation.md).
 
 ### 1.3 Data stores
 

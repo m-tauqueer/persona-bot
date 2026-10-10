@@ -13,11 +13,13 @@ When you need **behaviour**, read the code. When you change **intent**, update t
 
 1. [`../AGENTS.md`](../AGENTS.md) — owner, working loop, commit rules, commands
 2. [`progress.md`](progress.md) — live status: what works, what is in flight, what is parked
-3. [`plans/voice-audio.md`](plans/voice-audio.md) — **current work**: the echo/routing trade and
+3. [`plans/openai-decisions.md`](plans/openai-decisions.md) — **new implementation plan**:
+   memory routing and answer/acknowledge code implemented; validation/manual acceptance open
+4. [`plans/voice-audio.md`](plans/voice-audio.md) — open work: the echo/routing trade and
    per-persona voice configuration
-4. [`plans/caller-memory.md`](plans/caller-memory.md) — caller facts in Engram private, sitting
+5. [`plans/caller-memory.md`](plans/caller-memory.md) — caller facts in Engram private, sitting
    transcript in Postgres
-5. [`decisions/`](decisions/README.md) — why we chose what we chose; do not re-litigate Accepted
+6. [`decisions/`](decisions/README.md) — why we chose what we chose; do not re-litigate Accepted
    records
 
 ## Reference

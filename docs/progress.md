@@ -1,6 +1,6 @@
 # Progress
 
-Live status as of 18 Sep 2026. Owner: Tauqueer.
+Implementation/status update: 10 Oct 2026. Owner: Tauqueer. Decisions account access is live-verified; a product sitting has not passed for this change.
 
 This file answers "where are we?" It is not the architecture spec
 ([`architecture.md`](architecture.md)), not the memory contract
@@ -43,6 +43,19 @@ one member's private pool for one persona without destroying shared knowledge.
 History and measured latency: [`archive/shipped.md`](archive/shipped.md).
 
 ## In flight
+
+**[`plans/openai-decisions.md`](plans/openai-decisions.md) (10 Oct 2026).** Phase 1 memory
+routing code is implemented with a dedicated client, bounded contextual adapter, shadow/active
+modes, unchanged permission filtering, safe logs, and a read-only calibration probe. Defaults
+remain legacy backend/off; no `.env` changes. A real 12-case run with candidate confidence `0.7`
+returned 12 valid answers, nine effective policy matches, three conservative both choices, and zero incorrect
+narrowings. Earlier cold requests timed out. Owner threshold approval, paired first-word samples,
+and `/chat`/Aura/Fish manual sittings remain pending; **the phase is not done**.
+[Evidence and handoff](tests/decisions-memory-routing.md). Phase 2 answer/acknowledge code is now implemented by explicit owner request, with one combined
+Decisions request and the existing speaking stream. The combined 14-case probe needs a stricter
+scope candidate (`0.9`) than the initial scope-only run; acknowledge candidate is `0.8`. Both
+remain unapproved and disabled. [Phase 2 validation](tests/decisions-conversation.md). Memory
+validation and quality evaluation remain planned. Existing audio/caller-memory work stays open.
 
 **Spoken output (1 Oct 2026).** Tauqueer sat commit `5585f0e`. The cloned Fish voice came out clean
 and the call was quicker than the later tree. Playback is `AudioContext.destination` again. Fish

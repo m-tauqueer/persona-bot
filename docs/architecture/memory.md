@@ -312,3 +312,24 @@ Dirty converse dumps stay in a member’s private pool until the owner names **t
 5. `list-private` again — `count` is 0.
 6. Then a clean sitting. Do not run this for every member. Do not destroy the persona (shared plus every private pool would go). Subscription stays, so the next sitting still talks.
 
+
+
+## 13. Optional Decisions memory routing
+
+The retrieve path supports `ENGRAM_SCOPE_ROUTER_BACKEND=decisions`; legacy Chat Completions
+remains the default and an explicit rollback. The master scope switch still applies. Decisions
+mode off sends no request; shadow keeps both authorized lists without waiting; active can remove
+one list only after every row passed existing `may_ground` filtering. Missing member credentials
+skip classification and remain shared-only. Classification never chooses a tenant or credential.
+
+Context is the current question, validated catalog identity, and labelled history from this sitting.
+It excludes memory rows, emails, credentials, and caller/persona ids. Caps drop oldest history;
+a required payload that cannot fit returns both. The separate client has zero SDK retries and
+bounded running plus queued work. The deadline includes queue time; a caller timeout does not
+release a running request's slot or allow a late result to modify the reply.
+
+Active requires `DECISIONS_SCOPE_MIN_CONFIDENCE`; timeout/refusal/invalid output/low confidence/
+saturation/input overflow retains both authorized lists. A chosen empty list keeps existing honest
+answer treatment. Extraction, hang-up processing, and Engram session identity are unchanged.
+[Evidence](../tests/decisions-memory-routing.md): code exists, live API calibration is preliminary,
+and feature activation/manual acceptance remains pending. Proposed ADR 0006 is still Proposed.

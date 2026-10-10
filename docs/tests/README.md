@@ -49,6 +49,19 @@ rewrite that tree.
 Spoken calls need a live public think URL (`BYO_LLM_PUBLIC_URL`). Locally that is a tunnel; in
 production it is the public origin.
 
+## Decisions memory-routing probe
+
+`uv run --directory worker python -m worker.decisions.probe` checks the real Decisions API using
+synthetic scope fixtures. `--threshold <candidate>` evaluates confidence fallback; `--fixture <path>`
+uses another labelled JSON set. `--question-set conversation` evaluates reply mode alone;
+`--question-set both --threshold <scope> --conversation-threshold <reply>` evaluates the combined
+request and reports unanswered-request mistakes separately from conservative answers.
+It performs no Engram or conversation writes. Missing credentials
+report SKIP. Incorrect narrowing or provider/parse/deadline failures make the probe fail.
+[Evidence, limitations, and the manual handoff](decisions-memory-routing.md). The probe cannot
+establish end-to-end first-word latency or approve a production threshold.
+[Conversational validation and manual handoff](decisions-conversation.md).
+
 ## Manual sittings
 
 Some behaviour cannot be automated and is checked by a person on a real device. After the last

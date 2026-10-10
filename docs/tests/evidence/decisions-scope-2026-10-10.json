@@ -1,0 +1,363 @@
+{
+  "date": "2026-10-10",
+  "sdk_version": "3.28.0",
+  "timeout_seconds": 1.5,
+  "max_retries": 0,
+  "fixture": "worker/tests/fixtures/decisions/scope.json",
+  "threshold_approved": false,
+  "active_enabled": false,
+  "runs": [
+    {
+      "model": "gpt-6-luna",
+      "prompt_sha256": "24cfae765f5615623b22d10bf0dc53829159d77d9e036e81eb98d9d82e39e728",
+      "threshold": null,
+      "sample_count": 12,
+      "counts": {
+        "conservative_both": 3,
+        "match": 7,
+        "incorrect_narrowing": 2
+      },
+      "outcomes": {
+        "timeout": 4,
+        "success": 8
+      },
+      "cases": [
+        {
+          "case_id": "persona-knowledge",
+          "expected": "shared",
+          "choice": null,
+          "confidence": null,
+          "probabilities": {},
+          "outcome": "timeout",
+          "duration_ms": 1500.0,
+          "verdict": "conservative_both"
+        },
+        {
+          "case_id": "persona-identity",
+          "expected": "shared",
+          "choice": null,
+          "confidence": null,
+          "probabilities": {},
+          "outcome": "timeout",
+          "duration_ms": 1500.0,
+          "verdict": "conservative_both"
+        },
+        {
+          "case_id": "caller-recall",
+          "expected": "private",
+          "choice": null,
+          "confidence": null,
+          "probabilities": {},
+          "outcome": "timeout",
+          "duration_ms": 1500.0,
+          "verdict": "conservative_both"
+        },
+        {
+          "case_id": "mixed",
+          "expected": "both",
+          "choice": null,
+          "confidence": null,
+          "probabilities": {},
+          "outcome": "timeout",
+          "duration_ms": 1500.0,
+          "verdict": "match"
+        },
+        {
+          "case_id": "ambiguous",
+          "expected": "both",
+          "choice": "shared",
+          "confidence": 0.25,
+          "probabilities": {
+            "shared": 0.5,
+            "private": 0.1,
+            "both": 0.4
+          },
+          "outcome": "success",
+          "duration_ms": 392.23,
+          "verdict": "incorrect_narrowing"
+        },
+        {
+          "case_id": "shared-followup",
+          "expected": "shared",
+          "choice": "shared",
+          "confidence": 0.72,
+          "probabilities": {
+            "shared": 0.81,
+            "private": 0.01,
+            "both": 0.18
+          },
+          "outcome": "success",
+          "duration_ms": 438.71,
+          "verdict": "match"
+        },
+        {
+          "case_id": "caller-followup",
+          "expected": "private",
+          "choice": "private",
+          "confidence": 0.83,
+          "probabilities": {
+            "shared": 0.0,
+            "private": 0.89,
+            "both": 0.11
+          },
+          "outcome": "success",
+          "duration_ms": 196.04,
+          "verdict": "match"
+        },
+        {
+          "case_id": "correction",
+          "expected": "private",
+          "choice": "private",
+          "confidence": 0.43,
+          "probabilities": {
+            "shared": 0.14,
+            "private": 0.62,
+            "both": 0.24
+          },
+          "outcome": "success",
+          "duration_ms": 284.97,
+          "verdict": "match"
+        },
+        {
+          "case_id": "quoted-persona",
+          "expected": "shared",
+          "choice": "shared",
+          "confidence": 0.99,
+          "probabilities": {
+            "shared": 0.99,
+            "private": 0.01,
+            "both": 0.0
+          },
+          "outcome": "success",
+          "duration_ms": 202.29,
+          "verdict": "match"
+        },
+        {
+          "case_id": "quoted-caller",
+          "expected": "private",
+          "choice": "private",
+          "confidence": 0.83,
+          "probabilities": {
+            "shared": 0.0,
+            "private": 0.89,
+            "both": 0.11
+          },
+          "outcome": "success",
+          "duration_ms": 126.74,
+          "verdict": "match"
+        },
+        {
+          "case_id": "no-context",
+          "expected": "both",
+          "choice": "shared",
+          "confidence": 0.28,
+          "probabilities": {
+            "shared": 0.52,
+            "private": 0.23,
+            "both": 0.25
+          },
+          "outcome": "success",
+          "duration_ms": 138.63,
+          "verdict": "incorrect_narrowing"
+        },
+        {
+          "case_id": "mixed-followup",
+          "expected": "both",
+          "choice": "both",
+          "confidence": 0.48,
+          "probabilities": {
+            "shared": 0.08,
+            "private": 0.27,
+            "both": 0.65
+          },
+          "outcome": "success",
+          "duration_ms": 305.84,
+          "verdict": "match"
+        }
+      ]
+    },
+    {
+      "model": "gpt-6-luna",
+      "prompt_sha256": "24cfae765f5615623b22d10bf0dc53829159d77d9e036e81eb98d9d82e39e728",
+      "threshold": 0.7,
+      "sample_count": 12,
+      "counts": {
+        "match": 9,
+        "conservative_both": 3
+      },
+      "outcomes": {
+        "success": 12
+      },
+      "cases": [
+        {
+          "case_id": "persona-knowledge",
+          "expected": "shared",
+          "choice": "shared",
+          "confidence": 0.93,
+          "probabilities": {
+            "shared": 0.95,
+            "private": 0.02,
+            "both": 0.03
+          },
+          "outcome": "success",
+          "duration_ms": 271.01,
+          "verdict": "match"
+        },
+        {
+          "case_id": "persona-identity",
+          "expected": "shared",
+          "choice": "shared",
+          "confidence": 0.46,
+          "probabilities": {
+            "shared": 0.64,
+            "private": 0.22,
+            "both": 0.14
+          },
+          "outcome": "success",
+          "duration_ms": 150.11,
+          "verdict": "conservative_both"
+        },
+        {
+          "case_id": "caller-recall",
+          "expected": "private",
+          "choice": "private",
+          "confidence": 0.69,
+          "probabilities": {
+            "shared": 0.01,
+            "private": 0.79,
+            "both": 0.2
+          },
+          "outcome": "success",
+          "duration_ms": 123.32,
+          "verdict": "conservative_both"
+        },
+        {
+          "case_id": "mixed",
+          "expected": "both",
+          "choice": "both",
+          "confidence": 0.37,
+          "probabilities": {
+            "shared": 0.37,
+            "private": 0.05,
+            "both": 0.58
+          },
+          "outcome": "success",
+          "duration_ms": 122.73,
+          "verdict": "match"
+        },
+        {
+          "case_id": "ambiguous",
+          "expected": "both",
+          "choice": "shared",
+          "confidence": 0.25,
+          "probabilities": {
+            "shared": 0.5,
+            "private": 0.1,
+            "both": 0.4
+          },
+          "outcome": "success",
+          "duration_ms": 147.12,
+          "verdict": "match"
+        },
+        {
+          "case_id": "shared-followup",
+          "expected": "shared",
+          "choice": "shared",
+          "confidence": 0.76,
+          "probabilities": {
+            "shared": 0.84,
+            "private": 0.01,
+            "both": 0.15
+          },
+          "outcome": "success",
+          "duration_ms": 122.27,
+          "verdict": "match"
+        },
+        {
+          "case_id": "caller-followup",
+          "expected": "private",
+          "choice": "private",
+          "confidence": 0.83,
+          "probabilities": {
+            "shared": 0.0,
+            "private": 0.89,
+            "both": 0.11
+          },
+          "outcome": "success",
+          "duration_ms": 128.13,
+          "verdict": "match"
+        },
+        {
+          "case_id": "correction",
+          "expected": "private",
+          "choice": "private",
+          "confidence": 0.43,
+          "probabilities": {
+            "shared": 0.14,
+            "private": 0.62,
+            "both": 0.24
+          },
+          "outcome": "success",
+          "duration_ms": 379.88,
+          "verdict": "conservative_both"
+        },
+        {
+          "case_id": "quoted-persona",
+          "expected": "shared",
+          "choice": "shared",
+          "confidence": 0.99,
+          "probabilities": {
+            "shared": 0.99,
+            "private": 0.01,
+            "both": 0.0
+          },
+          "outcome": "success",
+          "duration_ms": 130.41,
+          "verdict": "match"
+        },
+        {
+          "case_id": "quoted-caller",
+          "expected": "private",
+          "choice": "private",
+          "confidence": 0.83,
+          "probabilities": {
+            "shared": 0.0,
+            "private": 0.89,
+            "both": 0.11
+          },
+          "outcome": "success",
+          "duration_ms": 135.52,
+          "verdict": "match"
+        },
+        {
+          "case_id": "no-context",
+          "expected": "both",
+          "choice": "shared",
+          "confidence": 0.28,
+          "probabilities": {
+            "shared": 0.52,
+            "private": 0.23,
+            "both": 0.25
+          },
+          "outcome": "success",
+          "duration_ms": 153.74,
+          "verdict": "match"
+        },
+        {
+          "case_id": "mixed-followup",
+          "expected": "both",
+          "choice": "both",
+          "confidence": 0.48,
+          "probabilities": {
+            "shared": 0.08,
+            "private": 0.27,
+            "both": 0.65
+          },
+          "outcome": "success",
+          "duration_ms": 226.55,
+          "verdict": "match"
+        }
+      ]
+    }
+  ]
+}

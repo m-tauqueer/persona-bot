@@ -1,0 +1,920 @@
+{
+  "date": "2026-10-10",
+  "sdk_version": "3.28.0",
+  "timeout_seconds": 1.5,
+  "max_retries": 0,
+  "fixture": "worker/tests/fixtures/decisions/conversation.json",
+  "thresholds_approved": false,
+  "active_enabled": false,
+  "runs": [
+    {
+      "model": "gpt-6-luna",
+      "sample_count": 14,
+      "request_count": 14,
+      "question_count": 2,
+      "prompt_sha256": "d8aa5c990a3143f0bb613957d132e36b979b5cd0e7b236f4ee69c980dcd88749",
+      "scope_threshold": 0.7,
+      "conversation_threshold": 0.8,
+      "counts": {
+        "scope_match": 8,
+        "reply_match": 13,
+        "scope_conservative_both": 4,
+        "scope_incorrect_narrowing": 2,
+        "conservative_answer": 1
+      },
+      "outcomes": {
+        "success": 28
+      },
+      "cases": [
+        {
+          "case_id": "thanks",
+          "duration_ms": 825.17,
+          "answers": [
+            {
+              "name": "memory_scope",
+              "expected": "both",
+              "choice": "shared",
+              "confidence": 0.2,
+              "probabilities": {
+                "shared": 0.47,
+                "private": 0.38,
+                "both": 0.15
+              },
+              "outcome": "success",
+              "verdict": "scope_match"
+            },
+            {
+              "name": "reply_mode",
+              "expected": "acknowledge",
+              "choice": "acknowledge",
+              "confidence": 0.88,
+              "probabilities": {
+                "answer": 0.06,
+                "acknowledge": 0.94
+              },
+              "outcome": "success",
+              "verdict": "reply_match"
+            }
+          ]
+        },
+        {
+          "case_id": "new-fact",
+          "duration_ms": 151.96,
+          "answers": [
+            {
+              "name": "memory_scope",
+              "expected": "private",
+              "choice": "private",
+              "confidence": 0.63,
+              "probabilities": {
+                "shared": 0.13,
+                "private": 0.75,
+                "both": 0.12
+              },
+              "outcome": "success",
+              "verdict": "scope_conservative_both"
+            },
+            {
+              "name": "reply_mode",
+              "expected": "acknowledge",
+              "choice": "acknowledge",
+              "confidence": 0.88,
+              "probabilities": {
+                "answer": 0.06,
+                "acknowledge": 0.94
+              },
+              "outcome": "success",
+              "verdict": "reply_match"
+            }
+          ]
+        },
+        {
+          "case_id": "emotion",
+          "duration_ms": 320.15,
+          "answers": [
+            {
+              "name": "memory_scope",
+              "expected": "both",
+              "choice": "private",
+              "confidence": 0.88,
+              "probabilities": {
+                "shared": 0.02,
+                "private": 0.92,
+                "both": 0.06
+              },
+              "outcome": "success",
+              "verdict": "scope_incorrect_narrowing"
+            },
+            {
+              "name": "reply_mode",
+              "expected": "acknowledge",
+              "choice": "acknowledge",
+              "confidence": 0.92,
+              "probabilities": {
+                "answer": 0.04,
+                "acknowledge": 0.96
+              },
+              "outcome": "success",
+              "verdict": "reply_match"
+            }
+          ]
+        },
+        {
+          "case_id": "mixed-question",
+          "duration_ms": 180.02,
+          "answers": [
+            {
+              "name": "memory_scope",
+              "expected": "private",
+              "choice": "private",
+              "confidence": 0.67,
+              "probabilities": {
+                "shared": 0.01,
+                "private": 0.78,
+                "both": 0.21
+              },
+              "outcome": "success",
+              "verdict": "scope_conservative_both"
+            },
+            {
+              "name": "reply_mode",
+              "expected": "answer",
+              "choice": "answer",
+              "confidence": 0.9,
+              "probabilities": {
+                "answer": 0.95,
+                "acknowledge": 0.05
+              },
+              "outcome": "success",
+              "verdict": "reply_match"
+            }
+          ]
+        },
+        {
+          "case_id": "persona-question",
+          "duration_ms": 220.16,
+          "answers": [
+            {
+              "name": "memory_scope",
+              "expected": "shared",
+              "choice": "shared",
+              "confidence": 0.96,
+              "probabilities": {
+                "shared": 0.97,
+                "private": 0.01,
+                "both": 0.02
+              },
+              "outcome": "success",
+              "verdict": "scope_match"
+            },
+            {
+              "name": "reply_mode",
+              "expected": "answer",
+              "choice": "answer",
+              "confidence": 0.98,
+              "probabilities": {
+                "answer": 0.99,
+                "acknowledge": 0.01
+              },
+              "outcome": "success",
+              "verdict": "reply_match"
+            }
+          ]
+        },
+        {
+          "case_id": "correction",
+          "duration_ms": 355.09,
+          "answers": [
+            {
+              "name": "memory_scope",
+              "expected": "private",
+              "choice": "private",
+              "confidence": 0.8,
+              "probabilities": {
+                "shared": 0.01,
+                "private": 0.87,
+                "both": 0.12
+              },
+              "outcome": "success",
+              "verdict": "scope_match"
+            },
+            {
+              "name": "reply_mode",
+              "expected": "acknowledge",
+              "choice": "acknowledge",
+              "confidence": 0.96,
+              "probabilities": {
+                "answer": 0.02,
+                "acknowledge": 0.98
+              },
+              "outcome": "success",
+              "verdict": "reply_match"
+            }
+          ]
+        },
+        {
+          "case_id": "correction-request",
+          "duration_ms": 130.65,
+          "answers": [
+            {
+              "name": "memory_scope",
+              "expected": "private",
+              "choice": "private",
+              "confidence": 0.55,
+              "probabilities": {
+                "shared": 0.02,
+                "private": 0.7,
+                "both": 0.28
+              },
+              "outcome": "success",
+              "verdict": "scope_conservative_both"
+            },
+            {
+              "name": "reply_mode",
+              "expected": "answer",
+              "choice": "answer",
+              "confidence": 0.68,
+              "probabilities": {
+                "answer": 0.84,
+                "acknowledge": 0.16
+              },
+              "outcome": "success",
+              "verdict": "reply_match"
+            }
+          ]
+        },
+        {
+          "case_id": "confirmation-request",
+          "duration_ms": 163.53,
+          "answers": [
+            {
+              "name": "memory_scope",
+              "expected": "shared",
+              "choice": "shared",
+              "confidence": 0.77,
+              "probabilities": {
+                "shared": 0.85,
+                "private": 0.04,
+                "both": 0.11
+              },
+              "outcome": "success",
+              "verdict": "scope_match"
+            },
+            {
+              "name": "reply_mode",
+              "expected": "answer",
+              "choice": "answer",
+              "confidence": 0.86,
+              "probabilities": {
+                "answer": 0.93,
+                "acknowledge": 0.07
+              },
+              "outcome": "success",
+              "verdict": "reply_match"
+            }
+          ]
+        },
+        {
+          "case_id": "confirmation-social",
+          "duration_ms": 270.51,
+          "answers": [
+            {
+              "name": "memory_scope",
+              "expected": "both",
+              "choice": "shared",
+              "confidence": 0.22,
+              "probabilities": {
+                "shared": 0.48,
+                "private": 0.33,
+                "both": 0.19
+              },
+              "outcome": "success",
+              "verdict": "scope_match"
+            },
+            {
+              "name": "reply_mode",
+              "expected": "acknowledge",
+              "choice": "acknowledge",
+              "confidence": 0.3,
+              "probabilities": {
+                "answer": 0.35,
+                "acknowledge": 0.65
+              },
+              "outcome": "success",
+              "verdict": "conservative_answer"
+            }
+          ]
+        },
+        {
+          "case_id": "quoted-dialogue",
+          "duration_ms": 200.81,
+          "answers": [
+            {
+              "name": "memory_scope",
+              "expected": "both",
+              "choice": "shared",
+              "confidence": 0.89,
+              "probabilities": {
+                "shared": 0.93,
+                "private": 0.02,
+                "both": 0.05
+              },
+              "outcome": "success",
+              "verdict": "scope_incorrect_narrowing"
+            },
+            {
+              "name": "reply_mode",
+              "expected": "answer",
+              "choice": "answer",
+              "confidence": 0.88,
+              "probabilities": {
+                "answer": 0.94,
+                "acknowledge": 0.06
+              },
+              "outcome": "success",
+              "verdict": "reply_match"
+            }
+          ]
+        },
+        {
+          "case_id": "ambiguous",
+          "duration_ms": 134.36,
+          "answers": [
+            {
+              "name": "memory_scope",
+              "expected": "both",
+              "choice": "shared",
+              "confidence": 0.22,
+              "probabilities": {
+                "shared": 0.48,
+                "private": 0.21,
+                "both": 0.31
+              },
+              "outcome": "success",
+              "verdict": "scope_match"
+            },
+            {
+              "name": "reply_mode",
+              "expected": "answer",
+              "choice": "answer",
+              "confidence": 0.56,
+              "probabilities": {
+                "answer": 0.78,
+                "acknowledge": 0.22
+              },
+              "outcome": "success",
+              "verdict": "reply_match"
+            }
+          ]
+        },
+        {
+          "case_id": "farewell",
+          "duration_ms": 169.68,
+          "answers": [
+            {
+              "name": "memory_scope",
+              "expected": "both",
+              "choice": "shared",
+              "confidence": 0.48,
+              "probabilities": {
+                "shared": 0.65,
+                "private": 0.3,
+                "both": 0.05
+              },
+              "outcome": "success",
+              "verdict": "scope_match"
+            },
+            {
+              "name": "reply_mode",
+              "expected": "acknowledge",
+              "choice": "acknowledge",
+              "confidence": 0.92,
+              "probabilities": {
+                "answer": 0.04,
+                "acknowledge": 0.96
+              },
+              "outcome": "success",
+              "verdict": "reply_match"
+            }
+          ]
+        },
+        {
+          "case_id": "disclosure-request",
+          "duration_ms": 145.03,
+          "answers": [
+            {
+              "name": "memory_scope",
+              "expected": "both",
+              "choice": "shared",
+              "confidence": 0.07,
+              "probabilities": {
+                "shared": 0.38,
+                "private": 0.38,
+                "both": 0.24
+              },
+              "outcome": "success",
+              "verdict": "scope_match"
+            },
+            {
+              "name": "reply_mode",
+              "expected": "answer",
+              "choice": "answer",
+              "confidence": 0.98,
+              "probabilities": {
+                "answer": 0.99,
+                "acknowledge": 0.01
+              },
+              "outcome": "success",
+              "verdict": "reply_match"
+            }
+          ]
+        },
+        {
+          "case_id": "caller-question",
+          "duration_ms": 140.97,
+          "answers": [
+            {
+              "name": "memory_scope",
+              "expected": "private",
+              "choice": "private",
+              "confidence": 0.69,
+              "probabilities": {
+                "shared": 0.01,
+                "private": 0.79,
+                "both": 0.2
+              },
+              "outcome": "success",
+              "verdict": "scope_conservative_both"
+            },
+            {
+              "name": "reply_mode",
+              "expected": "answer",
+              "choice": "answer",
+              "confidence": 0.82,
+              "probabilities": {
+                "answer": 0.91,
+                "acknowledge": 0.09
+              },
+              "outcome": "success",
+              "verdict": "reply_match"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "model": "gpt-6-luna",
+      "sample_count": 14,
+      "request_count": 14,
+      "question_count": 2,
+      "prompt_sha256": "d8aa5c990a3143f0bb613957d132e36b979b5cd0e7b236f4ee69c980dcd88749",
+      "scope_threshold": 0.9,
+      "conversation_threshold": 0.8,
+      "counts": {
+        "scope_match": 8,
+        "reply_match": 13,
+        "scope_conservative_both": 6,
+        "conservative_answer": 1
+      },
+      "outcomes": {
+        "success": 28
+      },
+      "cases": [
+        {
+          "case_id": "thanks",
+          "duration_ms": 752.67,
+          "answers": [
+            {
+              "name": "memory_scope",
+              "expected": "both",
+              "choice": "shared",
+              "confidence": 0.2,
+              "probabilities": {
+                "shared": 0.47,
+                "private": 0.38,
+                "both": 0.15
+              },
+              "outcome": "success",
+              "verdict": "scope_match"
+            },
+            {
+              "name": "reply_mode",
+              "expected": "acknowledge",
+              "choice": "acknowledge",
+              "confidence": 0.88,
+              "probabilities": {
+                "answer": 0.06,
+                "acknowledge": 0.94
+              },
+              "outcome": "success",
+              "verdict": "reply_match"
+            }
+          ]
+        },
+        {
+          "case_id": "new-fact",
+          "duration_ms": 710.86,
+          "answers": [
+            {
+              "name": "memory_scope",
+              "expected": "private",
+              "choice": "private",
+              "confidence": 0.63,
+              "probabilities": {
+                "shared": 0.13,
+                "private": 0.75,
+                "both": 0.12
+              },
+              "outcome": "success",
+              "verdict": "scope_conservative_both"
+            },
+            {
+              "name": "reply_mode",
+              "expected": "acknowledge",
+              "choice": "acknowledge",
+              "confidence": 0.88,
+              "probabilities": {
+                "answer": 0.06,
+                "acknowledge": 0.94
+              },
+              "outcome": "success",
+              "verdict": "reply_match"
+            }
+          ]
+        },
+        {
+          "case_id": "emotion",
+          "duration_ms": 191.48,
+          "answers": [
+            {
+              "name": "memory_scope",
+              "expected": "both",
+              "choice": "private",
+              "confidence": 0.88,
+              "probabilities": {
+                "shared": 0.02,
+                "private": 0.92,
+                "both": 0.06
+              },
+              "outcome": "success",
+              "verdict": "scope_match"
+            },
+            {
+              "name": "reply_mode",
+              "expected": "acknowledge",
+              "choice": "acknowledge",
+              "confidence": 0.92,
+              "probabilities": {
+                "answer": 0.04,
+                "acknowledge": 0.96
+              },
+              "outcome": "success",
+              "verdict": "reply_match"
+            }
+          ]
+        },
+        {
+          "case_id": "mixed-question",
+          "duration_ms": 152.44,
+          "answers": [
+            {
+              "name": "memory_scope",
+              "expected": "private",
+              "choice": "private",
+              "confidence": 0.67,
+              "probabilities": {
+                "shared": 0.01,
+                "private": 0.78,
+                "both": 0.21
+              },
+              "outcome": "success",
+              "verdict": "scope_conservative_both"
+            },
+            {
+              "name": "reply_mode",
+              "expected": "answer",
+              "choice": "answer",
+              "confidence": 0.9,
+              "probabilities": {
+                "answer": 0.95,
+                "acknowledge": 0.05
+              },
+              "outcome": "success",
+              "verdict": "reply_match"
+            }
+          ]
+        },
+        {
+          "case_id": "persona-question",
+          "duration_ms": 172.52,
+          "answers": [
+            {
+              "name": "memory_scope",
+              "expected": "shared",
+              "choice": "shared",
+              "confidence": 0.96,
+              "probabilities": {
+                "shared": 0.97,
+                "private": 0.01,
+                "both": 0.02
+              },
+              "outcome": "success",
+              "verdict": "scope_match"
+            },
+            {
+              "name": "reply_mode",
+              "expected": "answer",
+              "choice": "answer",
+              "confidence": 0.98,
+              "probabilities": {
+                "answer": 0.99,
+                "acknowledge": 0.01
+              },
+              "outcome": "success",
+              "verdict": "reply_match"
+            }
+          ]
+        },
+        {
+          "case_id": "correction",
+          "duration_ms": 131.76,
+          "answers": [
+            {
+              "name": "memory_scope",
+              "expected": "private",
+              "choice": "private",
+              "confidence": 0.8,
+              "probabilities": {
+                "shared": 0.01,
+                "private": 0.87,
+                "both": 0.12
+              },
+              "outcome": "success",
+              "verdict": "scope_conservative_both"
+            },
+            {
+              "name": "reply_mode",
+              "expected": "acknowledge",
+              "choice": "acknowledge",
+              "confidence": 0.96,
+              "probabilities": {
+                "answer": 0.02,
+                "acknowledge": 0.98
+              },
+              "outcome": "success",
+              "verdict": "reply_match"
+            }
+          ]
+        },
+        {
+          "case_id": "correction-request",
+          "duration_ms": 137.88,
+          "answers": [
+            {
+              "name": "memory_scope",
+              "expected": "private",
+              "choice": "private",
+              "confidence": 0.55,
+              "probabilities": {
+                "shared": 0.02,
+                "private": 0.7,
+                "both": 0.28
+              },
+              "outcome": "success",
+              "verdict": "scope_conservative_both"
+            },
+            {
+              "name": "reply_mode",
+              "expected": "answer",
+              "choice": "answer",
+              "confidence": 0.68,
+              "probabilities": {
+                "answer": 0.84,
+                "acknowledge": 0.16
+              },
+              "outcome": "success",
+              "verdict": "reply_match"
+            }
+          ]
+        },
+        {
+          "case_id": "confirmation-request",
+          "duration_ms": 184.45,
+          "answers": [
+            {
+              "name": "memory_scope",
+              "expected": "shared",
+              "choice": "shared",
+              "confidence": 0.77,
+              "probabilities": {
+                "shared": 0.85,
+                "private": 0.04,
+                "both": 0.11
+              },
+              "outcome": "success",
+              "verdict": "scope_conservative_both"
+            },
+            {
+              "name": "reply_mode",
+              "expected": "answer",
+              "choice": "answer",
+              "confidence": 0.86,
+              "probabilities": {
+                "answer": 0.93,
+                "acknowledge": 0.07
+              },
+              "outcome": "success",
+              "verdict": "reply_match"
+            }
+          ]
+        },
+        {
+          "case_id": "confirmation-social",
+          "duration_ms": 258.93,
+          "answers": [
+            {
+              "name": "memory_scope",
+              "expected": "both",
+              "choice": "shared",
+              "confidence": 0.22,
+              "probabilities": {
+                "shared": 0.48,
+                "private": 0.33,
+                "both": 0.19
+              },
+              "outcome": "success",
+              "verdict": "scope_match"
+            },
+            {
+              "name": "reply_mode",
+              "expected": "acknowledge",
+              "choice": "acknowledge",
+              "confidence": 0.3,
+              "probabilities": {
+                "answer": 0.35,
+                "acknowledge": 0.65
+              },
+              "outcome": "success",
+              "verdict": "conservative_answer"
+            }
+          ]
+        },
+        {
+          "case_id": "quoted-dialogue",
+          "duration_ms": 266.24,
+          "answers": [
+            {
+              "name": "memory_scope",
+              "expected": "both",
+              "choice": "shared",
+              "confidence": 0.89,
+              "probabilities": {
+                "shared": 0.93,
+                "private": 0.02,
+                "both": 0.05
+              },
+              "outcome": "success",
+              "verdict": "scope_match"
+            },
+            {
+              "name": "reply_mode",
+              "expected": "answer",
+              "choice": "answer",
+              "confidence": 0.88,
+              "probabilities": {
+                "answer": 0.94,
+                "acknowledge": 0.06
+              },
+              "outcome": "success",
+              "verdict": "reply_match"
+            }
+          ]
+        },
+        {
+          "case_id": "ambiguous",
+          "duration_ms": 142.15,
+          "answers": [
+            {
+              "name": "memory_scope",
+              "expected": "both",
+              "choice": "shared",
+              "confidence": 0.22,
+              "probabilities": {
+                "shared": 0.48,
+                "private": 0.21,
+                "both": 0.31
+              },
+              "outcome": "success",
+              "verdict": "scope_match"
+            },
+            {
+              "name": "reply_mode",
+              "expected": "answer",
+              "choice": "answer",
+              "confidence": 0.56,
+              "probabilities": {
+                "answer": 0.78,
+                "acknowledge": 0.22
+              },
+              "outcome": "success",
+              "verdict": "reply_match"
+            }
+          ]
+        },
+        {
+          "case_id": "farewell",
+          "duration_ms": 150.72,
+          "answers": [
+            {
+              "name": "memory_scope",
+              "expected": "both",
+              "choice": "shared",
+              "confidence": 0.48,
+              "probabilities": {
+                "shared": 0.65,
+                "private": 0.3,
+                "both": 0.05
+              },
+              "outcome": "success",
+              "verdict": "scope_match"
+            },
+            {
+              "name": "reply_mode",
+              "expected": "acknowledge",
+              "choice": "acknowledge",
+              "confidence": 0.92,
+              "probabilities": {
+                "answer": 0.04,
+                "acknowledge": 0.96
+              },
+              "outcome": "success",
+              "verdict": "reply_match"
+            }
+          ]
+        },
+        {
+          "case_id": "disclosure-request",
+          "duration_ms": 153.05,
+          "answers": [
+            {
+              "name": "memory_scope",
+              "expected": "both",
+              "choice": "shared",
+              "confidence": 0.07,
+              "probabilities": {
+                "shared": 0.38,
+                "private": 0.38,
+                "both": 0.24
+              },
+              "outcome": "success",
+              "verdict": "scope_match"
+            },
+            {
+              "name": "reply_mode",
+              "expected": "answer",
+              "choice": "answer",
+              "confidence": 0.98,
+              "probabilities": {
+                "answer": 0.99,
+                "acknowledge": 0.01
+              },
+              "outcome": "success",
+              "verdict": "reply_match"
+            }
+          ]
+        },
+        {
+          "case_id": "caller-question",
+          "duration_ms": 278.73,
+          "answers": [
+            {
+              "name": "memory_scope",
+              "expected": "private",
+              "choice": "private",
+              "confidence": 0.69,
+              "probabilities": {
+                "shared": 0.01,
+                "private": 0.79,
+                "both": 0.2
+              },
+              "outcome": "success",
+              "verdict": "scope_conservative_both"
+            },
+            {
+              "name": "reply_mode",
+              "expected": "answer",
+              "choice": "answer",
+              "confidence": 0.82,
+              "probabilities": {
+                "answer": 0.91,
+                "acknowledge": 0.09
+              },
+              "outcome": "success",
+              "verdict": "reply_match"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
