@@ -4,13 +4,17 @@ from pydantic import ValidationError
 from worker.config import WorkerSettings
 
 
-def test_decisions_defaults_and_dedicated_client(settings: WorkerSettings) -> None:
+def test_decisions_defaults_and_dedicated_client(
+    settings: WorkerSettings,
+    monkeypatch,
+) -> None:
     from worker.clients import create_decisions
 
     assert settings.engram_scope_router_backend == "chat_completions"
     assert settings.decisions_scope_mode == "off"
     with pytest.raises(RuntimeError, match="not configured"):
         create_decisions(settings)
+    monkeypatch.setenv("OPENAI_BASE_URL", "https://exported-speaking.example/v1")
     changed = settings.model_dump() | {
         "openai_api_key": "speaking-key",
         "openai_base_url": "https://speaking.example/v1",

@@ -4,6 +4,7 @@ import time
 from collections.abc import Callable, Iterator
 from concurrent.futures import Future, ThreadPoolExecutor
 from dataclasses import dataclass, field
+from threading import Lock
 from typing import Any, NoReturn, TypeVar
 from uuid import UUID, uuid4
 
@@ -14,6 +15,10 @@ from worker.clients import create_openai
 from worker.config import WorkerSettings
 from worker.controller.controller import Controller
 from worker.controller.decision import Action, Decision, ReasonCode, TurnSignals
+from worker.decisions.client import DecisionsClient
+from worker.decisions.context import DecisionContext
+from worker.decisions.routing import scope_decision as decisions_scope_decision
+from worker.decisions.types import ChoiceResult, DecisionBundle
 from worker.engram.caller_facts import CallerFactExtractor, stamp_caller_fact
 from worker.engram.closing import run_closing_pass
 from worker.engram.errors import (
@@ -144,6 +149,7 @@ class GroundedPools:
     @property
     def dropped(self) -> int:
         return self.shared_dropped + self.private_dropped
+
 
 _BRAIN_HTTP: list[tuple[type[BrainError], int]] = [
     (NotSubscribedError, 403),
@@ -296,6 +302,8 @@ class TurnRunner:
         self._reframer: Reframer | None = None
         self._answerer: Answerer | None = None
         self._scope_router: ScopeRouter | None = None
+        self._decisions: DecisionsClient | None = None
+        self._decisions_lock = Lock()
         self._extractor: CallerFactExtractor | None = None
         self._grant_tried: set[tuple[str, str]] = set()
 
@@ -484,10 +492,20 @@ class TurnRunner:
                     conn.commit()
                 voice_config = _voice_config(persona["voice_config"])
                 identity = _persona_identity(persona, self._settings)
-                history = recent_history(
+                scope_history = recent_history(
                     conn,
                     session_id,
-                    self._settings.reframe_history_turns,
+                    max(
+                        self._settings.reframe_history_turns,
+                        self._settings.decisions_history_turns,
+                    )
+                    if self._decisions_enabled()
+                    else self._settings.reframe_history_turns,
+                )
+                history = (
+                    scope_history[-self._settings.reframe_history_turns :]
+                    if self._settings.reframe_history_turns
+                    else []
                 )
                 mirrored = has_active_subscription(
                     conn,
@@ -564,6 +582,10 @@ class TurnRunner:
                         engram_persona_id=engram_persona_id,
                         query=text,
                         prior_sid=prior_sid,
+                        history=scope_history,
+                        persona_identity=identity,
+                        session_id=session_id,
+                        correlation_id=correlation_id,
                     )
                 )
                 if not member_authenticated:
@@ -602,6 +624,10 @@ class TurnRunner:
                             engram_persona_id=engram_persona_id,
                             query=text,
                             prior_sid=prior_sid,
+                            history=scope_history,
+                            persona_identity=identity,
+                            session_id=session_id,
+                            correlation_id=correlation_id,
                         )
                     )
                     memories = grounded.memories
@@ -1204,12 +1230,11 @@ class TurnRunner:
                     app_user_id=plan.app_user_id,
                     engram_user_id=plan.engram_user_id,
                     email=email,
-                    op=lambda active, body=stamp_caller_fact(
-                        fact,
-                        settings,
-                    ): active.ingest_private_text(
-                        plan.engram_persona_id,
-                        body,
+                    op=lambda active, body=stamp_caller_fact(fact, settings): (
+                        active.ingest_private_text(
+                            plan.engram_persona_id,
+                            body,
+                        )
                     ),
                 )
                 if stored is None:
@@ -1254,6 +1279,110 @@ class TurnRunner:
                 session_id=str(session_id),
                 reason=self._settings.engram_writeback_reason_write_failed,
             )
+
+    def _decisions_enabled(self) -> bool:
+        settings = self._settings
+        return (
+            settings.engram_scope_router_enabled
+            and settings.engram_scope_router_backend == "decisions"
+            and settings.decisions_scope_mode != "off"
+        )
+
+    def _finish_decisions_scope(
+        self,
+        future: Future[DecisionBundle] | None,
+        *,
+        started: float,
+        member_authenticated: bool,
+        session_id: UUID | None,
+        correlation_id: UUID | None,
+    ) -> ScopeDecision:
+        settings = self._settings
+        both = settings.engram_retrieve_scope_both
+        if not member_authenticated:
+            if future is not None:
+                _drain(future)
+            return ScopeDecision(
+                both, settings.engram_scope_router_reason_unauthenticated
+            )
+        if future is None:
+            return ScopeDecision(both, settings.engram_scope_router_reason_disabled)
+        if settings.decisions_scope_mode == "shadow":
+
+            def completed(done: Future[DecisionBundle]) -> None:
+                try:
+                    bundle = done.result()
+                    result = bundle.answer(settings.decisions_scope_question_name)
+                    decision = decisions_scope_decision(result, settings)
+                    self._log_decisions_scope(
+                        result,
+                        decision,
+                        bundle.duration_ms,
+                        0,
+                        session_id,
+                        correlation_id,
+                    )
+                except Exception:  # noqa: BLE001 - callback cannot break reply
+                    pass
+
+            future.add_done_callback(completed)
+            return ScopeDecision(both, settings.decisions_reason_shadow)
+        wait_started = time.monotonic()
+        timeout = (
+            settings.decisions_timeout_seconds
+            or settings.engram_scope_router_timeout_seconds
+        )
+        try:
+            remaining = timeout - (wait_started - started)
+            if remaining <= 0:
+                raise TimeoutError
+            bundle = future.result(timeout=remaining)
+            result = bundle.answer(settings.decisions_scope_question_name)
+            duration = bundle.duration_ms
+        except TimeoutError:
+            result = ChoiceResult(settings.decisions_scope_question_name, "timeout")
+            duration = (time.monotonic() - started) * 1000
+        except Exception:  # noqa: BLE001 - model faults retain authorized memory
+            result = ChoiceResult(settings.decisions_scope_question_name, "unavailable")
+            duration = (time.monotonic() - started) * 1000
+        decision = decisions_scope_decision(result, settings)
+        self._log_decisions_scope(
+            result,
+            decision,
+            duration,
+            (time.monotonic() - wait_started) * 1000,
+            session_id,
+            correlation_id,
+        )
+        return decision
+
+    def _log_decisions_scope(
+        self,
+        result: ChoiceResult,
+        decision: ScopeDecision,
+        duration: float,
+        wait_ms: float,
+        session_id: UUID | None,
+        correlation_id: UUID | None,
+    ) -> None:
+        log.info(
+            self._settings.decisions_log_event,
+            **turn_log_fields(
+                self._settings,
+                {
+                    "correlation_id": str(correlation_id) if correlation_id else None,
+                    "session_id": str(session_id) if session_id else None,
+                    "scope_backend": "decisions",
+                    "scope_mode": self._settings.decisions_scope_mode,
+                    "scope_choice": result.choice,
+                    "scope_confidence": result.confidence,
+                    "scope_duration_ms": duration,
+                    "scope_wait_ms": wait_ms,
+                    "retrieve_scope": decision.scope,
+                    "retrieve_scope_reason": decision.reason,
+                },
+            ),
+        )
 
     def _start_scope_router(
         self,
@@ -1405,12 +1534,47 @@ class TurnRunner:
         engram_persona_id: str,
         query: str,
         prior_sid: str | None,
+        history: list[HistoryTurn] | None = None,
+        persona_identity: dict[str, Any] | None = None,
+        session_id: UUID | None = None,
+        correlation_id: UUID | None = None,
     ) -> tuple[GroundedPools, ScopeDecision, bool]:
         started_router = time.perf_counter()
-        scope_fut = self._start_scope_router(
-            query,
-            member_authenticated=member_authenticated,
-        )
+        decisions_backend = self._settings.engram_scope_router_backend == "decisions"
+        decision_started = time.monotonic()
+        decision_fut: Future[DecisionBundle] | None = None
+        scope_fut = None
+        if decisions_backend:
+            if self._decisions_enabled() and member_authenticated:
+                context = DecisionContext.from_turn(
+                    query,
+                    history or [],
+                    persona_identity or {},
+                    self._settings,
+                )
+                try:
+                    with self._decisions_lock:
+                        if self._decisions is None:
+                            self._decisions = DecisionsClient(self._settings)
+                    decision_fut = self._decisions.submit(context)
+                except Exception:  # noqa: BLE001 - setup failure must retain memory
+                    decision_fut = Future()
+                    decision_fut.set_result(
+                        DecisionBundle(
+                            (
+                                ChoiceResult(
+                                    self._settings.decisions_scope_question_name,
+                                    "unavailable",
+                                ),
+                            ),
+                            0,
+                        )
+                    )
+        else:
+            scope_fut = self._start_scope_router(
+                query,
+                member_authenticated=member_authenticated,
+            )
         started_read = time.perf_counter()
         try:
             shared, private, member_authenticated = self._fetch_scoped_retrieves(
@@ -1425,6 +1589,8 @@ class TurnRunner:
         except BaseException:
             if scope_fut is not None:
                 _drain(scope_fut)
+            if decision_fut is not None:
+                _drain(decision_fut)
             raise
         grounded = self._ground_retrieve(
             shared,
@@ -1434,11 +1600,20 @@ class TurnRunner:
             brain_ms=int((time.perf_counter() - started_read) * 1000),
             member_authenticated=member_authenticated,
         )
-        scope_decision = self._await_scope_decision(
-            scope_fut,
-            started=started_router,
-            member_authenticated=member_authenticated,
-        )
+        if decisions_backend:
+            scope_decision = self._finish_decisions_scope(
+                decision_fut,
+                started=decision_started,
+                member_authenticated=member_authenticated,
+                session_id=session_id,
+                correlation_id=correlation_id,
+            )
+        else:
+            scope_decision = self._await_scope_decision(
+                scope_fut,
+                started=started_router,
+                member_authenticated=member_authenticated,
+            )
         return (
             self._apply_scope_decision(grounded, scope_decision),
             scope_decision,
@@ -1748,6 +1923,8 @@ class TurnRunner:
         self._writers.shutdown(wait=True)
         self._readers.shutdown(wait=True)
         self._routers.shutdown(wait=True)
+        if self._decisions is not None:
+            self._decisions.close()
         self._brains.close()
         self._member_brains.close()
 

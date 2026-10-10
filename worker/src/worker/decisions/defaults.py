@@ -16,3 +16,6 @@ DEFAULT_PRIVATE_DESCRIPTION = (
 DEFAULT_BOTH_DESCRIPTION = (
     "Both pools are relevant, or there is insufficient evidence to discard one."
 )
+
+# Explicit default prevents the SDK from inheriting OPENAI_BASE_URL.
+DEFAULT_DECISIONS_BASE_URL = "https://api.openai.com/v1"

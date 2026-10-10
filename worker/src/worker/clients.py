@@ -4,6 +4,7 @@ import psycopg
 from openai import OpenAI
 
 from worker.config import WorkerSettings
+from worker.decisions.defaults import DEFAULT_DECISIONS_BASE_URL
 
 
 def create_postgres(settings: WorkerSettings) -> psycopg.Connection:
@@ -35,7 +36,6 @@ def create_decisions(settings: WorkerSettings) -> OpenAI:
     if not key:
         raise RuntimeError("Decisions is not configured")
     options = {"api_key": key, "max_retries": settings.decisions_max_retries}
-    if settings.decisions_base_url:
-        base = str(settings.decisions_base_url).rstrip("/")
-        options["base_url"] = base if base.endswith("/v1") else f"{base}/v1"
+    base = str(settings.decisions_base_url or DEFAULT_DECISIONS_BASE_URL).rstrip("/")
+    options["base_url"] = base if base.endswith("/v1") else f"{base}/v1"
     return OpenAI(**options)
