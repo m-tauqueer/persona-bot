@@ -27,3 +27,15 @@ def create_openai(settings: WorkerSettings) -> OpenAI:
     if base_url:
         return OpenAI(api_key=settings.openai_api_key, base_url=base_url)
     return OpenAI(api_key=settings.openai_api_key)
+
+
+def create_decisions(settings: WorkerSettings) -> OpenAI:
+    """Independent provider connection; never inherit the speaking base URL."""
+    key = settings.decisions_api_key or settings.openai_api_key
+    if not key:
+        raise RuntimeError("Decisions is not configured")
+    options = {"api_key": key, "max_retries": settings.decisions_max_retries}
+    if settings.decisions_base_url:
+        base = str(settings.decisions_base_url).rstrip("/")
+        options["base_url"] = base if base.endswith("/v1") else f"{base}/v1"
+    return OpenAI(**options)

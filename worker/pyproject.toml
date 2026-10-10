@@ -12,7 +12,7 @@ dependencies = [
     "engram-ai-sdk",
     "fastapi",
     "httpx",
-    "openai",
+    "openai>=3.26.0",
     "psycopg[binary,pool]",
     "pydantic-settings",
     "python-dotenv",

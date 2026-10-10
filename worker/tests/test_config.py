@@ -4,6 +4,73 @@ from pydantic import ValidationError
 from worker.config import WorkerSettings
 
 
+def test_decisions_defaults_and_dedicated_client(settings: WorkerSettings) -> None:
+    from worker.clients import create_decisions
+
+    assert settings.engram_scope_router_backend == "chat_completions"
+    assert settings.decisions_scope_mode == "off"
+    with pytest.raises(RuntimeError, match="not configured"):
+        create_decisions(settings)
+    changed = settings.model_dump() | {
+        "openai_api_key": "speaking-key",
+        "openai_base_url": "https://speaking.example/v1",
+        "decisions_api_key": "decision-key",
+    }
+    client = create_decisions(WorkerSettings(_env_file=None, **changed))
+    try:
+        assert str(client.base_url) == "https://api.openai.com/v1/"
+        assert client.api_key == "decision-key"
+        assert client.max_retries == 0
+        assert hasattr(client, "decisions")
+    finally:
+        client.close()
+    changed.update(decisions_api_key=None, decisions_base_url="https://decisions.example")
+    client = create_decisions(WorkerSettings(_env_file=None, **changed))
+    try:
+        assert client.api_key == "speaking-key"
+        assert str(client.base_url) == "https://decisions.example/v1/"
+    finally:
+        client.close()
+
+
+@pytest.mark.parametrize("overrides", [
+    {"decisions_scope_mode": "wrong"},
+    {"engram_scope_router_backend": "wrong"},
+    {"decisions_max_in_flight": 0},
+    {"decisions_history_turns": -1},
+    {"decisions_timeout_seconds": float("inf")},
+    {"decisions_scope_min_confidence": float("nan")},
+    {"decisions_scope_min_confidence": 1.1},
+    {"decisions_max_retries": 1},
+    {"decisions_reason_refusal": "timeout"},
+    {"decisions_context_history_key": "question"},
+])
+def test_decisions_config_rejects_invalid_settings(
+    settings: WorkerSettings, overrides: dict,
+) -> None:
+    with pytest.raises(ValidationError):
+        WorkerSettings(_env_file=None, **(settings.model_dump() | overrides))
+
+
+def test_decisions_active_requires_key_and_calibrated_threshold(
+    settings: WorkerSettings,
+) -> None:
+    data = settings.model_dump() | {
+        "engram_scope_router_enabled": True,
+        "engram_scope_router_backend": "decisions",
+        "decisions_scope_mode": "active",
+    }
+    with pytest.raises(ValidationError, match="requires DECISIONS_API_KEY"):
+        WorkerSettings(_env_file=None, **data)
+    data["decisions_api_key"] = "test-key"
+    with pytest.raises(ValidationError, match="calibrated"):
+        WorkerSettings(_env_file=None, **data)
+    data["decisions_scope_min_confidence"] = 0.9
+    assert WorkerSettings(_env_file=None, **data).decisions_scope_mode == "active"
+    data.update(decisions_scope_mode="shadow", decisions_scope_min_confidence=None)
+    assert WorkerSettings(_env_file=None, **data).decisions_scope_mode == "shadow"
+
+
 def test_boot_refuses_chat_while_member_session_auth_is_false(
     settings: WorkerSettings,
 ) -> None:

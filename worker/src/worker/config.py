@@ -8,6 +8,13 @@ from zoneinfo import ZoneInfo
 from pydantic import Field, HttpUrl, field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+from worker.decisions.defaults import (
+    DEFAULT_BOTH_DESCRIPTION,
+    DEFAULT_PRIVATE_DESCRIPTION,
+    DEFAULT_SCOPE_INSTRUCTIONS,
+    DEFAULT_SHARED_DESCRIPTION,
+)
+
 
 def env_file_path() -> Path:
     override = os.environ.get("ENV_FILE")
@@ -303,6 +310,52 @@ class WorkerSettings(BaseSettings):
     # pools. Off until the owner turns it on — fail-open is the default
     # path either way.
     engram_scope_router_enabled: bool = Field(default=False)
+    engram_scope_router_backend: Literal["chat_completions", "decisions"] = (
+        "chat_completions"
+    )
+    decisions_scope_mode: Literal["off", "shadow", "active"] = "off"
+    decisions_api_key: str | None = None
+    decisions_base_url: HttpUrl | None = None
+    decisions_model: str = Field(default="gpt-6-luna", min_length=1)
+    decisions_timeout_seconds: float | None = Field(
+        default=None, gt=0, allow_inf_nan=False,
+    )
+    # Retries would exceed the per-turn request budget. Explicitly reject them.
+    decisions_max_retries: Literal[0] = 0
+    decisions_max_in_flight: int = Field(default=4, gt=0)
+    decisions_history_turns: int = Field(default=24, ge=0)
+    decisions_input_max_bytes: int = Field(default=16384, gt=0)
+    decisions_scope_min_confidence: float | None = Field(
+        default=None, ge=0, le=1, allow_inf_nan=False,
+    )
+    decisions_scope_question_name: str = Field(default="memory_scope", min_length=1)
+    decisions_scope_instructions: str = Field(
+        default=DEFAULT_SCOPE_INSTRUCTIONS, min_length=1,
+    )
+    decisions_scope_shared_description: str = Field(
+        default=DEFAULT_SHARED_DESCRIPTION, min_length=1,
+    )
+    decisions_scope_private_description: str = Field(
+        default=DEFAULT_PRIVATE_DESCRIPTION, min_length=1,
+    )
+    decisions_scope_both_description: str = Field(
+        default=DEFAULT_BOTH_DESCRIPTION, min_length=1,
+    )
+    decisions_context_history_key: str = Field(default="history", min_length=1)
+    decisions_context_identity_key: str = Field(
+        default="persona_identity", min_length=1,
+    )
+    decisions_context_state_key: str = Field(default="app_state", min_length=1)
+    decisions_reason_low_confidence: str = Field(
+        default="low_confidence", min_length=1,
+    )
+    decisions_reason_refusal: str = Field(default="refusal", min_length=1)
+    decisions_reason_saturated: str = Field(default="saturated", min_length=1)
+    decisions_reason_input_too_large: str = Field(
+        default="input_too_large", min_length=1,
+    )
+    decisions_reason_shadow: str = Field(default="shadow", min_length=1)
+    decisions_log_event: str = Field(default="memory scope decision", min_length=1)
     engram_scope_router_model: str | None = None
     engram_scope_router_timeout_seconds: float = Field(default=1.5, gt=0)
     engram_scope_router_system_prompt: str | None = None
@@ -573,6 +626,10 @@ class WorkerSettings(BaseSettings):
         return value
 
     @field_validator(
+        "decisions_api_key",
+        "decisions_base_url",
+        "decisions_timeout_seconds",
+        "decisions_scope_min_confidence",
         "engram_api_key",
         "engram_org_id",
         "engram_persona_id",
@@ -770,6 +827,49 @@ class WorkerSettings(BaseSettings):
                 "ENGRAM_RETRIEVE_SCOPE_SHARED, ENGRAM_RETRIEVE_SCOPE_PRIVATE, "
                 "and ENGRAM_RETRIEVE_SCOPE_BOTH must be distinct"
             )
+        return self
+
+    @model_validator(mode="after")
+    def decisions_configuration(self) -> WorkerSettings:
+        keys = {
+            self.engram_scope_router_question_key,
+            self.decisions_context_history_key,
+            self.decisions_context_identity_key,
+            self.decisions_context_state_key,
+        }
+        if len(keys) != 4:
+            raise ValueError("Decisions context keys must be distinct")
+        extra_reasons = {
+            self.decisions_reason_low_confidence,
+            self.decisions_reason_refusal,
+            self.decisions_reason_saturated,
+            self.decisions_reason_input_too_large,
+            self.decisions_reason_shadow,
+        }
+        existing_reasons = {
+            self.engram_scope_router_reason_shared,
+            self.engram_scope_router_reason_private,
+            self.engram_scope_router_reason_both,
+            self.engram_scope_router_reason_timeout,
+            self.engram_scope_router_reason_error,
+            self.engram_scope_router_reason_unrecognised,
+            self.engram_scope_router_reason_disabled,
+            self.engram_scope_router_reason_unauthenticated,
+        }
+        if len(extra_reasons) != 5 or extra_reasons & existing_reasons:
+            raise ValueError("Decisions scope reason codes must be distinct")
+        on = (
+            self.engram_scope_router_enabled
+            and self.engram_scope_router_backend == "decisions"
+            and self.decisions_scope_mode != "off"
+        )
+        if on and not (self.decisions_api_key or self.openai_api_key):
+            raise ValueError("Decisions requires DECISIONS_API_KEY or OPENAI_API_KEY")
+        if on and self.decisions_scope_mode == "active":
+            if self.decisions_scope_min_confidence is None:
+                raise ValueError(
+                    "Active Decisions requires a calibrated scope threshold"
+                )
         return self
 
     @model_validator(mode="after")
