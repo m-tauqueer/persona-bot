@@ -40,6 +40,7 @@ select = ["E", "F", "I", "UP"]
 testpaths = ["tests"]
 pythonpath = ["src"]
 addopts = [
+    "--cov=worker.decisions",
     "--cov=worker.controller",
     "--cov=worker.turn.identity",
     "--cov=worker.turn.grant",

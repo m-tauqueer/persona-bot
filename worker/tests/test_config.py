@@ -24,7 +24,9 @@ def test_decisions_defaults_and_dedicated_client(settings: WorkerSettings) -> No
         assert hasattr(client, "decisions")
     finally:
         client.close()
-    changed.update(decisions_api_key=None, decisions_base_url="https://decisions.example")
+    changed.update(
+        decisions_api_key=None, decisions_base_url="https://decisions.example"
+    )
     client = create_decisions(WorkerSettings(_env_file=None, **changed))
     try:
         assert client.api_key == "speaking-key"
@@ -33,20 +35,24 @@ def test_decisions_defaults_and_dedicated_client(settings: WorkerSettings) -> No
         client.close()
 
 
-@pytest.mark.parametrize("overrides", [
-    {"decisions_scope_mode": "wrong"},
-    {"engram_scope_router_backend": "wrong"},
-    {"decisions_max_in_flight": 0},
-    {"decisions_history_turns": -1},
-    {"decisions_timeout_seconds": float("inf")},
-    {"decisions_scope_min_confidence": float("nan")},
-    {"decisions_scope_min_confidence": 1.1},
-    {"decisions_max_retries": 1},
-    {"decisions_reason_refusal": "timeout"},
-    {"decisions_context_history_key": "question"},
-])
+@pytest.mark.parametrize(
+    "overrides",
+    [
+        {"decisions_scope_mode": "wrong"},
+        {"engram_scope_router_backend": "wrong"},
+        {"decisions_max_in_flight": 0},
+        {"decisions_history_turns": -1},
+        {"decisions_timeout_seconds": float("inf")},
+        {"decisions_scope_min_confidence": float("nan")},
+        {"decisions_scope_min_confidence": 1.1},
+        {"decisions_max_retries": 1},
+        {"decisions_reason_refusal": "timeout"},
+        {"decisions_context_history_key": "question"},
+    ],
+)
 def test_decisions_config_rejects_invalid_settings(
-    settings: WorkerSettings, overrides: dict,
+    settings: WorkerSettings,
+    overrides: dict,
 ) -> None:
     with pytest.raises(ValidationError):
         WorkerSettings(_env_file=None, **(settings.model_dump() | overrides))
